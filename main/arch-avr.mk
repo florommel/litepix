@@ -5,7 +5,7 @@
 
 MCU = atmega328p
 DF_CPU = 16000000
-PROGRAMMER_CONF=-c usbasp
+AVRDUDE_FLAGS=-c usbasp
 
 CC = avr-gcc
 CFLAGS = -c -std=gnu99 -mmcu=$(MCU) -DF_CPU=$(DF_CPU) -Os \
@@ -27,7 +27,7 @@ all: $(TARGET).hex
 
 program: $(TARGET).hex
 	@echo write program to flash
-	avrdude -p$(MCU) $(PROGRAMMER_CONF) -Uflash:w:$(TARGET).hex:a
+	avrdude -p$(MCU) $(AVRDUDE_FLAGS) -Uflash:w:$(TARGET).hex:a
 
 
 size: $(TARGET).hex
