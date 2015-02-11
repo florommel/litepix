@@ -24,10 +24,11 @@ computer without any additional hardware required (gtk3 is needed).
 *   cd to a source directory (currently only `main`)
 
 *   Compile and run simulation
+
         $ make ARCH=sim
         $ ./build-sim/litepix.elf
 
-*   Compile and program the controller
+*   Compile and program the controller (You probably have to change the values
+    of `MCU` and `AVRDUDE_FLAGS` in `arch-avr.mk` according to your needs)
+
         $ make program
-    (You probably have to change the values of `MCU` and `AVRDUDE_FLAGS` in
-    `arch-avr.mk` according to your needs)
