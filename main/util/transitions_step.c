@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include "transitions_step.h"
 #include "../core/pix.h"
+#include <stdio.h>
 
 
 t_tr_state get_tr_state(uint8_t step_count) {
@@ -85,5 +86,38 @@ bool tr_dissolve_step_p(t_tr_state* state, uint8_t* pic, uint8_t* order) {
     state->step_curr++;
     state->d_sum += d;
     
+    return true;
+}
+
+
+bool tr_roll_step_p(t_tr_state* state, uint8_t* pic) {
+    uint8_t substep_count = state->step_count / 20;
+    if (substep_count == 0) {
+        substep_count = 1;
+        state->step_count = 20;
+    }
+    
+    if (state->step_curr >= state->step_count) return false;
+    
+    uint8_t masterstep_curr = state->step_curr / substep_count;
+    uint8_t substep_curr = state->step_curr 
+        - (masterstep_curr*substep_count);
+    
+    int8_t x = substep_count - substep_curr;
+    
+    uint16_t ib = masterstep_curr*3;
+    uint8_t i;
+    for (i = 0; i < PIX_HEIGHT; i++) {
+        int16_t tmp;
+        tmp = (pic[ib] - pix_canvas[ib]) / x;
+        pix_canvas[ib] += tmp;
+        tmp = (pic[ib+1] - pix_canvas[ib+1]) / x;
+        pix_canvas[ib+1] += tmp;
+        tmp = (pic[ib+2] - pix_canvas[ib+2]) / x;
+        pix_canvas[ib+2] += tmp;
+        ib += 60;
+    }
+    
+    state->step_curr++;
     return true;
 }

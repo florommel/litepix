@@ -20,7 +20,6 @@
 
 
 #include "core/init.h"
-
 #include "main.h"
 
 
@@ -28,7 +27,7 @@ int main(void) {
     init_pix();
     init_clock();
     
-    test_app2();
+    test_app4();
 
     return 0;
 }

@@ -28,4 +28,6 @@ void test_app2(void);
 
 void test_app3(void);
 
+void test_app4(void);
+
 #endif

@@ -41,5 +41,6 @@ bool tr_fade_step_p(t_tr_state* state, uint8_t* pic);
 
 bool tr_dissolve_step_p(t_tr_state* state, uint8_t* pic, uint8_t* order);
 
+bool tr_roll_step_p(t_tr_state* state, uint8_t* pic);
 
 #endif
