@@ -4,7 +4,7 @@
 # without any warranty.
 
 CC = gcc
-CFLAGS = -c -std=gnu99 -Wall -Wstrict-prototypes `pkg-config --cflags --libs gtk+-3.0`
+CFLAGS = -ggdb -c -std=gnu99 -Wall -Wstrict-prototypes `pkg-config --cflags --libs gtk+-3.0`
 LDFLAGS = `pkg-config --cflags --libs gtk+-3.0` -Wall
 
 
