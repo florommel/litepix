@@ -40,7 +40,7 @@ bool timer_test(t_timer* timer, int16_t new_interval) {
     uint16_t b = timer->_next - curr_time;
     
     if (a <= b) {
-        timer->_next += new_interval;
+        timer->_next = curr_time + new_interval;
         timer->_state = (new_interval >= 0);
         return true;
     }
