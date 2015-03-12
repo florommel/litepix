@@ -26,6 +26,8 @@
 
 void tr_fade_p(uint8_t* pic, uint32_t duration);
 
-//void tr_dissolve_p(uint8_t* pic, uint32_t duration);
+void tr_dissolve_p(uint8_t* pic, uint32_t duration);
+
+void tr_roll_p(uint8_t* pic, uint32_t duration);
 
 #endif

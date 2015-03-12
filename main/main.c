@@ -27,7 +27,7 @@ int main(void) {
     init_pix();
     init_clock();
     
-    test_app4();
+    test_transitions();
 
     return 0;
 }

@@ -22,12 +22,8 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
-void test_app(void);
+void test_pixels(void);
 
-void test_app2(void);
-
-void test_app3(void);
-
-void test_app4(void);
+void test_transitions(void);
 
 #endif

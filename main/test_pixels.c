@@ -1,5 +1,5 @@
 /*
- * test_app3.c
+ * test_app.c
  * This file is part of litepix
  *
  * Copyright (C) 2015 - Florian Rommel
@@ -19,33 +19,26 @@
  */
 
 
-#include <stdlib.h>
 #include "main.h"
+#include "core/timer.h"
 #include "core/pix.h"
-#include "util/transitions_block.h"
 
 
-static void fill(uint8_t* canvas, uint8_t r, uint8_t g, uint8_t b) {
-    uint8_t i;
-    uint8_t* p = canvas;
-    for (i = 0; i < PIX_NUM_PIXELS; i++) {
-        *p++ = g;
-        *p++ = r;
-        *p++ = b;
-    }
-}
-
-
-void test_app3(void) {
-    uint8_t canvas[PIX_NUM_BYTES];
+void test_pixels(void) {
+    uint16_t x = PIX_NUM_BYTES-3;
     
-    fill(pix_canvas, 0, 150, 250);
+    t_timer timer = timer_get(0);
     
     while (1) {
-        fill(canvas, 255, 0, 0);
-        tr_fade_p(canvas, 200);
-        fill(canvas, 0, 150, 250);
-        tr_fade_p(canvas, 20000);
+        if (timer_test(&timer, 100)) {
+            pix_canvas[x++] = 0;
+            pix_canvas[x++] = 0;
+            pix_canvas[x++] = 0;
+            if (x >= PIX_NUM_BYTES) x = 0;
+            pix_canvas[x] = 255;
+            pix_canvas[x+1] = 255;
+            pix_canvas[x+2] = 255;
+            pix_render();
+        }
     }
 }
-
