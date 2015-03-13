@@ -19,8 +19,8 @@
  */
 
 
-#ifndef _UTIL__TRANSITIONS_BLOCK_H_
-#define _UTIL__TRANSITIONS_BLOCK_H_
+#ifndef _UTIL__TRANSITIONS_H_
+#define _UTIL__TRANSITIONS_H_
 
 #include <stdint.h>
 
