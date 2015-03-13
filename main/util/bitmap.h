@@ -26,12 +26,12 @@
 #include <stdbool.h>
 
 
-#define BITMAP_BYTE_SIZE(bit_size) ((((bit_size) & 0x07) == 0) \
+#define BITMAP_GET_BYTE_SIZE(bit_size) ((((bit_size) & 0x07) == 0) \
     ? ((bit_size) >> 3) : (((bit_size) >> 3) + 1))
 
 
 static inline void bitmap_fill(uint8_t* bitmap, uint8_t bit_size, bool value) {
-    uint8_t n = BITMAP_BYTE_SIZE(bit_size);
+    uint8_t n = BITMAP_GET_BYTE_SIZE(bit_size);
     uint8_t v = value ? UINT8_MAX : 0;
     uint8_t i;
     for (i = 0; i < n; i++) bitmap[i] = v;
