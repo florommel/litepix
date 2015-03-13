@@ -24,46 +24,32 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "../core/pix.h"
 
 
-#if PIX_NUM_PIXELS % 8 == 0
-    #define BITMAP_SIZE (COUNT/8)
-#else
-    #define BITMAP_SIZE ((COUNT/8)+1)
-#endif
+#define BITMAP_BYTE_SIZE(bit_size) ((((bit_size) & 0x07) == 0) \
+    ? ((bit_size) >> 3) : (((bit_size) >> 3) + 1))
 
 
-typedef struct {
-    uint8_t byte_index;
-    uint8_t bit_index;
-} t_bitmap_index;
-
-
-static inline t_bitmap_index to_bitmap_index(uint8_t index) {
-    t_bitmap_index bi;
-    bi.byte_index = index >> 3;
-    bi.bit_index = index - (bi.byte_index << 3);
-    return bi;
+static inline void bitmap_fill(uint8_t* bitmap, uint8_t bit_size, bool value) {
+    uint8_t n = BITMAP_BYTE_SIZE(bit_size);
+    uint8_t v = value ? UINT8_MAX : 0;
+    uint8_t i;
+    for (i = 0; i < n; i++) bitmap[i] = v;
 }
 
-static inline void bitmap_index_inc(t_bitmap_index *index) {
-    if (index->bit_index > 7) {
-        index->byte_index++;
-        index->bit_index = 0;
-    }
-    else {
-        index->bit_index++;
-    }
+
+static inline bool bitmap_get(uint8_t* bitmap, uint8_t index) {
+   return bitmap[index >> 3] & (1 << (index & 0x07));
 }
 
-static inline bool bitmap_get(uint8_t* bitmap, t_bitmap_index index) {
-   return bitmap[index.byte_index] & (1 << index.bit_index);
+
+static inline void bitmap_set(uint8_t* bitmap, uint8_t index) {
+    bitmap[index >> 3] |= (1 << (index & 0x07));
 }
 
-static inline void bitmap_set(uint8_t* bitmap, t_bitmap_index index) {
-    bitmap[index.byte_index] = 
-        bitmap[index.byte_index] | (1 << index.bit_index);
+
+static inline void bitmap_reset(uint8_t* bitmap, uint8_t index) {
+    bitmap[index >> 3] &= ~(1 << (index & 0x07));
 }
 
 
