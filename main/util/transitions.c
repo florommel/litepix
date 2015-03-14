@@ -32,7 +32,7 @@
 
 
 // TODO random??
-void shuffle(uint8_t *arr, uint8_t size) {
+static void shuffle(uint8_t *arr, uint8_t size) {
     uint8_t i;
     for (i = 0; i < size - 1; i++) {
         uint8_t j = i + rand() / (RAND_MAX / (size-i) + 1);
@@ -61,8 +61,7 @@ static void calculate_parameters(uint32_t duration,
 }
 
 
-void tr_fade_p(uint8_t* pic, uint32_t duration) {
-
+void tr_fade_p(uint8_t* pic, uint32_t duration, uint8_t* mask) {
     uint8_t step = 0;
     uint8_t step_count;
     int16_t interval;
@@ -74,18 +73,34 @@ void tr_fade_p(uint8_t* pic, uint32_t duration) {
     
         if (timer_test(&timer, interval)) {
         
-            uint16_t count;
+            uint8_t i;
             uint8_t* p_dest = pix_canvas;
             uint8_t* p_src = pic;
             uint8_t x = step_count - step;
             
-            for (count = PIX_NUM_BYTES; count > 0; count--) {
-                
-                int16_t tmp = (*p_src - *p_dest) / x;
-                *p_dest += tmp;
-                
-                p_dest++;
-                p_src++;
+            for (i = 0; i < PIX_NUM_PIXELS; i++) {
+                if ((mask == NULL) || bitmap_get(mask, i)) {
+                    int16_t tmp;
+                    
+                    tmp = (*p_src - *p_dest) / x;
+                    *p_dest += tmp;
+                    p_dest++;
+                    p_src++;
+                    
+                    tmp = (*p_src - *p_dest) / x;
+                    *p_dest += tmp;
+                    p_dest++;
+                    p_src++;
+                    
+                    tmp = (*p_src - *p_dest) / x;
+                    *p_dest += tmp;
+                    p_dest++;
+                    p_src++;
+                }
+                else {
+                    p_dest += 3;
+                    p_src += 3;
+                }
             }
             
             step++;
@@ -95,29 +110,38 @@ void tr_fade_p(uint8_t* pic, uint32_t duration) {
 }
 
 
-void tr_dissolve_p(uint8_t* pic, uint32_t duration) {
-
+void tr_dissolve_p(uint8_t* pic, uint32_t duration, uint8_t* mask) {
     uint8_t step = 0;
     uint8_t d_sum = 0;
     uint8_t step_count;
     int16_t interval;
     calculate_parameters(duration, &interval, &step_count);
     
-    uint8_t order[PIX_NUM_PIXELS];
-    uint8_t i;
-    for (i = 0; i < PIX_NUM_PIXELS; i++) order[i] = i;
-    shuffle(order, PIX_NUM_PIXELS);
+    uint8_t i, j;
+    uint8_t order_size = 0;
+    if (mask == NULL) order_size = PIX_NUM_PIXELS;
+    else {
+        for (i = 0; i < PIX_NUM_PIXELS; i++) {
+            if (bitmap_get(mask, i)) order_size++;
+        }
+    }
+    uint8_t order[order_size];
+    for (i = 0, j= 0; i < PIX_NUM_PIXELS; i++) {
+        if ((mask == NULL) || bitmap_get(mask, i)) {
+            order[j] = i;
+            j++;
+        }
+    }
+    shuffle(order, order_size);
     
     t_timer timer = timer_get(interval);
     
     while (step < step_count) {
-    
-        if (timer_test(&timer, interval)) {
-        
-            uint8_t d = (PIX_NUM_PIXELS - d_sum) / (step_count - step);
-            
+        if (timer_test(&timer, interval)) {  
+            uint8_t d = (order_size - d_sum) / (step_count - step);
             uint16_t i = d_sum; // TODO eleminate i
             uint8_t n;
+            
             for (n = d; n > 0; n--) {
                 uint16_t p = order[i] * 3;
                 pix_canvas[p] = pic[p];
@@ -133,7 +157,8 @@ void tr_dissolve_p(uint8_t* pic, uint32_t duration) {
     }
 }
 
-void tr_roll_p(uint8_t* pic, uint32_t duration) {
+
+void tr_roll_p(uint8_t* pic, uint32_t duration, uint8_t* mask) {
     uint8_t step = 0;
     uint8_t step_count;
     int16_t interval;
@@ -148,26 +173,30 @@ void tr_roll_p(uint8_t* pic, uint32_t duration) {
     t_timer timer = timer_get(interval);
     
     while (step < step_count) {
-    
         if (timer_test(&timer, interval)) {
             uint8_t masterstep = step / substep_count;
             uint8_t substep = step - (masterstep * substep_count);
             int8_t x = substep_count - substep;
             
-            uint16_t ib = masterstep * 3;
-            uint8_t *p1 = &pix_canvas[ib];
-            uint8_t *p2 = &pic[ib];
+            uint16_t ib = masterstep;
+            uint8_t *p1 = &pix_canvas[ib * 3];
+            uint8_t *p2 = &pic[ib * 3];
             uint8_t i;
             for (i = 0; i < PIX_HEIGHT; i++) {
-                *p1 += (*p2 - *p1) / x;
-                p1++;
-                p2++;
-                *p1 += (*p2 - *p1) / x;
-                p1++;
-                p2++;
-                *p1 += (*p2 - *p1) / x;
+                if ((mask == NULL) || bitmap_get(mask, ib)) {
+                    *p1 += (*p2 - *p1) / x;
+                    p1++; p2++;
+                    *p1 += (*p2 - *p1) / x;
+                    p1++; p2++;
+                    *p1 += (*p2 - *p1) / x;
+                }
+                else {
+                    p1 += 2;
+                    p2 += 2;
+                }
                 p1 += (PIX_WIDTH * 3) - 2;
                 p2 += (PIX_WIDTH * 3) - 2;
+                ib += PIX_WIDTH;
             }
             
             step++;

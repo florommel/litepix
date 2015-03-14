@@ -53,21 +53,44 @@ void test_transitions(void) {
     
     uint8_t buffer[PIX_NUM_BYTES];
     
+    uint8_t mask[TR_MASK_SIZE] = {0};
+    uint8_t i;
+    for (i = 0; i < PIX_NUM_PIXELS; i += 3) {
+        bitmap_set(mask, i);
+    }
+    
     while (1) {
         fill_random(buffer);
-        tr_dissolve_p(buffer, 2000);
-        
-        fill(buffer, 255, 0, 0);
-        tr_roll_p(buffer, 2000);
-        
-        fill(buffer, 0, 0, 255);
-        tr_fade_p(buffer, 2000);
-        
-        fill(buffer, 40, 0, 0);
-        tr_fade_p(buffer, 5000);
+        tr_dissolve_p(buffer, 2000, NULL);
         
         fill(buffer, 0, 0, 0);
-        tr_dissolve_p(buffer, 4000);
+        tr_fade_p(buffer, 1000, mask);
+        
+        fill(buffer, 0, 0, 0);
+        tr_fade_p(buffer, 1000, NULL);
+        
+        fill(buffer, 100, 50, 100);
+        tr_dissolve_p(buffer, 2000, mask);
+        
+        fill_random(buffer);
+        tr_dissolve_p(buffer, 2000, mask);
+        
+        tr_dissolve_p(buffer, 2000, NULL);
+        
+        fill(buffer, 255, 0, 0);
+        tr_roll_p(buffer, 1400, NULL);
+        
+        fill(buffer, 0, 0, 0);
+        tr_dissolve_p(buffer, 2000, mask);
+        
+        fill(buffer, 0, 0, 255);
+        tr_fade_p(buffer, 2000, NULL);
+        
+        fill(buffer, 20, 0, 30);
+        tr_fade_p(buffer, 5000, NULL);
+        
+        fill(buffer, 0, 0, 0);
+        tr_roll_p(buffer, 4000, NULL);
     }
 }
 

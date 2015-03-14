@@ -23,11 +23,18 @@
 #define _UTIL__TRANSITIONS_H_
 
 #include <stdint.h>
+#include "../core/pix.h"
+#include "bitmap.h"
 
-void tr_fade_p(uint8_t* pic, uint32_t duration);
 
-void tr_dissolve_p(uint8_t* pic, uint32_t duration);
+#define TR_MASK_SIZE BITMAP_GET_BYTE_SIZE(PIX_NUM_PIXELS)
 
-void tr_roll_p(uint8_t* pic, uint32_t duration);
+
+void tr_fade_p(uint8_t* pic, uint32_t duration, uint8_t mask[TR_MASK_SIZE]);
+
+void tr_dissolve_p(uint8_t* pic, uint32_t duration, uint8_t mask[TR_MASK_SIZE]);
+
+void tr_roll_p(uint8_t* pic, uint32_t duration, uint8_t mask[TR_MASK_SIZE]);
+
 
 #endif
