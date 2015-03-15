@@ -24,6 +24,12 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "clock.h"
+
+
+#define TIMER_INIT(interval) (t_timer) \
+    { ._next = clock_time_ms() + interval, \
+      ._state = (interval >= 0) };
 
 
 typedef struct {
@@ -31,8 +37,6 @@ typedef struct {
     bool _state;
 } t_timer;
 
-
-t_timer timer_get(int16_t interval);
 
 bool timer_test(t_timer* timer, int16_t new_interval);
 

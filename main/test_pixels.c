@@ -27,7 +27,7 @@
 void test_pixels(void) {
     uint16_t x = PIX_NUM_BYTES-3;
     
-    t_timer timer = timer_get(0);
+    t_timer timer = TIMER_INIT(0);
     
     while (1) {
         if (timer_test(&timer, 100)) {

@@ -67,7 +67,7 @@ void tr_fade_p(uint8_t* pic, uint32_t duration, uint8_t* mask) {
     int16_t interval;
     calculate_parameters(duration, &interval, &step_count);
     
-    t_timer timer = timer_get(interval);
+    t_timer timer = TIMER_INIT(interval);
     
     while (step < step_count) {
     
@@ -134,7 +134,7 @@ void tr_dissolve_p(uint8_t* pic, uint32_t duration, uint8_t* mask) {
     }
     shuffle(order, order_size);
     
-    t_timer timer = timer_get(interval);
+    t_timer timer = TIMER_INIT(interval);
     
     while (step < step_count) {
         if (timer_test(&timer, interval)) {  
@@ -185,7 +185,7 @@ void tr_roll_p(uint8_t* pic, uint32_t duration, tr_direction direction,
         step_count = inc1;
     }*/ // TODO
     
-    t_timer timer = timer_get(interval);
+    t_timer timer = TIMER_INIT(interval);
     
     while (step < step_count) {
         if (timer_test(&timer, interval)) {

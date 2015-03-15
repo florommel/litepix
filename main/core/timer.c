@@ -20,16 +20,6 @@
 
 
 #include "timer.h"
-#include "clock.h"
-
-
-t_timer timer_get(int16_t interval) {
-    t_timer timer = {
-        ._next = clock_time_ms() + interval,
-        ._state = (interval >= 0)
-    };
-    return timer;
-}
 
 
 bool timer_test(t_timer* timer, int16_t new_interval) {
