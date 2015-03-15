@@ -1,5 +1,5 @@
 /*
- * transitions_block.h
+ * transitions.h
  * This file is part of litepix
  *
  * Copyright (C) 2015 - Florian Rommel
@@ -30,11 +30,20 @@
 #define TR_MASK_SIZE BITMAP_GET_BYTE_SIZE(PIX_NUM_PIXELS)
 
 
+typedef enum {
+    tr_left_right,
+    tr_right_left,
+    tr_top_bottom,
+    tr_bottom_top
+} tr_direction;
+
+
 void tr_fade_p(uint8_t* pic, uint32_t duration, uint8_t mask[TR_MASK_SIZE]);
 
 void tr_dissolve_p(uint8_t* pic, uint32_t duration, uint8_t mask[TR_MASK_SIZE]);
 
-void tr_roll_p(uint8_t* pic, uint32_t duration, uint8_t mask[TR_MASK_SIZE]);
+void tr_roll_p(uint8_t* pic, uint32_t duration, tr_direction direction,
+                   uint8_t mask[TR_MASK_SIZE]);
 
 
 #endif

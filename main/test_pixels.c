@@ -1,5 +1,5 @@
 /*
- * test_app.c
+ * test_pixels.c
  * This file is part of litepix
  *
  * Copyright (C) 2015 - Florian Rommel

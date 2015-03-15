@@ -1,5 +1,5 @@
 /*
- * test_app3.c
+ * test_transitions.c
  * This file is part of litepix
  *
  * Copyright (C) 2015 - Florian Rommel
@@ -75,10 +75,13 @@ void test_transitions(void) {
         fill_random(buffer);
         tr_dissolve_p(buffer, 2000, mask);
         
-        tr_dissolve_p(buffer, 2000, NULL);
+        tr_dissolve_p(buffer, 2400, NULL);
         
         fill(buffer, 255, 0, 0);
-        tr_roll_p(buffer, 1400, NULL);
+        tr_roll_p(buffer, 1400, tr_left_right, NULL);
+        
+        fill(buffer, 10, 0, 10);
+        tr_roll_p(buffer, 1400, tr_right_left, NULL);
         
         fill(buffer, 0, 0, 0);
         tr_dissolve_p(buffer, 2000, mask);
@@ -90,7 +93,7 @@ void test_transitions(void) {
         tr_fade_p(buffer, 5000, NULL);
         
         fill(buffer, 0, 0, 0);
-        tr_roll_p(buffer, 4000, NULL);
+        tr_roll_p(buffer, 2000, tr_bottom_top, NULL);
     }
 }
 

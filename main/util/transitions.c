@@ -1,5 +1,5 @@
 /*
- * transitions_block.c
+ * transitions.c
  * This file is part of litepix
  *
  * Copyright (C) 2015 - Florian Rommel
@@ -139,7 +139,7 @@ void tr_dissolve_p(uint8_t* pic, uint32_t duration, uint8_t* mask) {
     while (step < step_count) {
         if (timer_test(&timer, interval)) {  
             uint8_t d = (order_size - d_sum) / (step_count - step);
-            uint16_t i = d_sum; // TODO eleminate i
+            uint16_t i = d_sum;
             uint8_t n;
             
             for (n = d; n > 0; n--) {
@@ -158,17 +158,32 @@ void tr_dissolve_p(uint8_t* pic, uint32_t duration, uint8_t* mask) {
 }
 
 
-void tr_roll_p(uint8_t* pic, uint32_t duration, uint8_t* mask) {
+void tr_roll_p(uint8_t* pic, uint32_t duration, tr_direction direction,
+               uint8_t* mask) {
     uint8_t step = 0;
     uint8_t step_count;
     int16_t interval;
     calculate_parameters(duration, &interval, &step_count);
     
-    uint8_t substep_count = step_count / 20;
-    if (substep_count == 0) {
-        substep_count = 1;
-        step_count = 20;
+    // calculate direction dependant vars
+    uint8_t run_along, inc1, inc2, substep_count;
+    if (direction <= tr_right_left) {
+        run_along = PIX_HEIGHT;
+        inc1 = PIX_WIDTH;
+        inc2 = 1;
+        substep_count = step_count / PIX_WIDTH;
     }
+    else {
+        run_along = PIX_WIDTH;
+        inc1 = 1;
+        inc2 = PIX_WIDTH;
+        substep_count = step_count / PIX_HEIGHT;
+    }
+    
+    /*if (substep_count == 0) {
+        substep_count = 1;
+        step_count = inc1;
+    }*/ // TODO
     
     t_timer timer = timer_get(interval);
     
@@ -178,25 +193,23 @@ void tr_roll_p(uint8_t* pic, uint32_t duration, uint8_t* mask) {
             uint8_t substep = step - (masterstep * substep_count);
             int8_t x = substep_count - substep;
             
-            uint16_t ib = masterstep;
-            uint8_t *p1 = &pix_canvas[ib * 3];
-            uint8_t *p2 = &pic[ib * 3];
-            uint8_t i;
-            for (i = 0; i < PIX_HEIGHT; i++) {
+            if (direction == tr_right_left)
+                masterstep = PIX_WIDTH - masterstep - 1;
+            else if (direction == tr_bottom_top)
+                masterstep = PIX_HEIGHT - masterstep - 1;
+            
+            uint8_t i, ib = masterstep * inc2;
+            for (i = 0; i < run_along; i++) {
                 if ((mask == NULL) || bitmap_get(mask, ib)) {
+                    uint8_t *p1 = &pix_canvas[ib * 3];
+                    uint8_t *p2 = &pic[ib * 3];
                     *p1 += (*p2 - *p1) / x;
                     p1++; p2++;
                     *p1 += (*p2 - *p1) / x;
                     p1++; p2++;
                     *p1 += (*p2 - *p1) / x;
                 }
-                else {
-                    p1 += 2;
-                    p2 += 2;
-                }
-                p1 += (PIX_WIDTH * 3) - 2;
-                p2 += (PIX_WIDTH * 3) - 2;
-                ib += PIX_WIDTH;
+                ib += inc1;
             }
             
             step++;
