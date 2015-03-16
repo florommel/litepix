@@ -172,6 +172,7 @@ void tr_roll_p(uint8_t* pic, uint32_t duration, tr_direction direction,
         dist = PIX_WIDTH;
         col_dist = 1;
         substep_count = step_count / PIX_WIDTH;
+        if (substep_count == 0) substep_count = 1;
         step_count = substep_count * PIX_WIDTH;
     }
     else {
@@ -179,13 +180,9 @@ void tr_roll_p(uint8_t* pic, uint32_t duration, tr_direction direction,
         dist = 1;
         col_dist = PIX_WIDTH;
         substep_count = step_count / PIX_HEIGHT;
+        if (substep_count == 0) substep_count = 1;
         step_count = substep_count * PIX_HEIGHT;
     }
-    
-    /*if (substep_count == 0) {
-        substep_count = 1;
-        step_count = dist;
-    }*/ // TODO
     
     t_timer timer = TIMER_INIT(interval);
     
