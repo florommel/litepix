@@ -166,40 +166,42 @@ void tr_roll_p(uint8_t* pic, uint32_t duration, tr_direction direction,
     calculate_parameters(duration, &interval, &step_count);
     
     // calculate direction dependant vars
-    uint8_t run_along, inc1, inc2, substep_count;
+    uint8_t row_size, dist, col_dist, substep_count;
     if (direction <= tr_right_left) {
-        run_along = PIX_HEIGHT;
-        inc1 = PIX_WIDTH;
-        inc2 = 1;
+        row_size = PIX_HEIGHT;
+        dist = PIX_WIDTH;
+        col_dist = 1;
         substep_count = step_count / PIX_WIDTH;
+        step_count = substep_count * PIX_WIDTH;
     }
     else {
-        run_along = PIX_WIDTH;
-        inc1 = 1;
-        inc2 = PIX_WIDTH;
+        row_size = PIX_WIDTH;
+        dist = 1;
+        col_dist = PIX_WIDTH;
         substep_count = step_count / PIX_HEIGHT;
+        step_count = substep_count * PIX_HEIGHT;
     }
     
     /*if (substep_count == 0) {
         substep_count = 1;
-        step_count = inc1;
+        step_count = dist;
     }*/ // TODO
     
     t_timer timer = TIMER_INIT(interval);
     
     while (step < step_count) {
         if (timer_test(&timer, interval)) {
-            uint8_t masterstep = step / substep_count;
-            uint8_t substep = step - (masterstep * substep_count);
+            uint8_t column = step / substep_count;
+            uint8_t substep = step - (column * substep_count);
             int8_t x = substep_count - substep;
             
             if (direction == tr_right_left)
-                masterstep = PIX_WIDTH - masterstep - 1;
+                column = PIX_WIDTH - column - 1;
             else if (direction == tr_bottom_top)
-                masterstep = PIX_HEIGHT - masterstep - 1;
+                column = PIX_HEIGHT - column - 1;
             
-            uint8_t i, ib = masterstep * inc2;
-            for (i = 0; i < run_along; i++) {
+            uint8_t i, ib = column * col_dist;
+            for (i = 0; i < row_size; i++) {
                 if ((mask == NULL) || bitmap_get(mask, ib)) {
                     uint8_t *p1 = &pix_canvas[ib * 3];
                     uint8_t *p2 = &pic[ib * 3];
@@ -209,7 +211,7 @@ void tr_roll_p(uint8_t* pic, uint32_t duration, tr_direction direction,
                     p1++; p2++;
                     *p1 += (*p2 - *p1) / x;
                 }
-                ib += inc1;
+                ib += dist;
             }
             
             step++;
