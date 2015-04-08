@@ -2,7 +2,7 @@
  * pix.c
  * This file is part of litepix
  *
- * Copyright (C) 2015 - Florian Rommel
+ * Copyright (C) 2015 - Florian Rommel, Michael Nieß
  *
  * litepix is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,27 +34,26 @@ static uint8_t save_canvas[PIX_NUM_BYTES] = {0};
 static GMutex save_canvas_mutex;
 
 static GtkWidget *window;
-
+const int size = 100;
+const int offset = 10;
 
 static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, gpointer data) {
-    const int offset = 10;
-    
     cairo_set_source_rgb(cr, 0, 0, 0);
-    cairo_rectangle(cr, 0, 0, 620, 380);
+    cairo_rectangle(cr, 0, 0, (size*PIX_HEIGHT)+2*offset, (size*PIX_WIDTH)+2*offset);
     cairo_fill(cr);
     
     g_mutex_lock(&save_canvas_mutex);
     uint8_t *p = save_canvas;
     int i, j;
-    for (i = 0; i < 12; i++) {
-        for (j = 0; j < 20; j++) {
+    for (i = 0; i < PIX_WIDTH; i++) {
+        for (j = 0; j < PIX_HEIGHT; j++) {
             uint8_t g = *p++;
             uint8_t r = *p++;
             uint8_t b = *p++;
             cairo_set_source_rgb(cr, ((double)r)/256,
                                      ((double)g)/256,
                                      ((double)b)/256);
-            cairo_rectangle(cr, j*30+offset, i*30+offset, 28, 28);
+            cairo_rectangle(cr, j*size+offset, i*size+offset, size-2, size-2);
             cairo_fill(cr);
         }
     }
@@ -90,7 +89,7 @@ void init_pix(void) {
       G_CALLBACK(on_window_destroy), NULL);
     
     gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
-    gtk_window_set_default_size(GTK_WINDOW(window), 620, 380); 
+    gtk_window_set_default_size(GTK_WINDOW(window), (size*PIX_HEIGHT)+2*offset, (size*PIX_WIDTH)+2*offset); 
     gtk_window_set_title(GTK_WINDOW(window), "Simulator");
     
     gtk_widget_show_all(window);

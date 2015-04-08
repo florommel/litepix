@@ -2,7 +2,7 @@
  * transitions.h
  * This file is part of litepix
  *
- * Copyright (C) 2015 - Florian Rommel
+ * Copyright (C) 2015 - Florian Rommel, Michael Nieß
  *
  * litepix is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,10 +40,6 @@ typedef enum {
 
 void tr_fade_p(uint8_t* pic, uint32_t duration, uint8_t mask[TR_MASK_SIZE]);
 
-void tr_dissolve_p(uint8_t* pic, uint32_t duration, uint8_t mask[TR_MASK_SIZE]);
-
-void tr_roll_p(uint8_t* pic, uint32_t duration, tr_direction direction,
-                   uint8_t mask[TR_MASK_SIZE]);
-
+void tr_dissolve_p(uint8_t* pic, uint32_t duration);
 
 #endif

@@ -26,9 +26,9 @@
 #include <stdint.h>
 
 
-#define PIX_NUM_PIXELS (240)
-#define PIX_WIDTH (20)
-#define PIX_HEIGHT (12)
+#define PIX_NUM_PIXELS (9)
+#define PIX_WIDTH (3)
+#define PIX_HEIGHT (3)
 
 #define PIX_NUM_BYTES  (PIX_NUM_PIXELS*3)
 

@@ -1,8 +1,8 @@
 /*
- * input.h
+ * setter.h
  * This file is part of litepix
  *
- * Copyright (C) 2015 - Florian Rommel
+ * Copyright (C) 2015 - Michael Nieß
  *
  * litepix is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,20 +19,15 @@
  */
 
 
-#ifndef _CORE__INPUT_H_
-#define _CORE__INPUT_H_
+#ifndef _UTIL__SETTER_H_
+#define _UTIL__SETTER_H_
 
 #include <stdint.h>
-#include <stdbool.h>
 
+void set_pixel(uint8_t* pic, uint8_t index, uint8_t color[3]);
 
-typedef struct {
-    uint8_t dev;
-    uint8_t data;
-} t_input;
+void set_full(uint8_t* pic, uint8_t color[3]);
 
-
-bool input_test(t_input* input);
-
+void set_random(uint8_t* pic);
 
 #endif

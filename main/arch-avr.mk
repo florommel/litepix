@@ -3,9 +3,9 @@
 # notice and this notice are preserved.  This file is offered as-is,
 # without any warranty.
 
-MCU = atmega328p
-DF_CPU = 16000000
-AVRDUDE_FLAGS=-c usbasp
+MCU = attiny45
+DF_CPU = 8000000
+AVRDUDE_FLAGS=-c avrisp -b 19200 -P /dev/ttyACM0
 
 CC = avr-gcc
 CFLAGS = -c -std=gnu99 -mmcu=$(MCU) -DF_CPU=$(DF_CPU) -Os \

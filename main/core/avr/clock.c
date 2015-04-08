@@ -24,7 +24,7 @@
 #include "../init.h"
 #include "../clock.h"
 
-#define TIMER_MAX 250
+#define TIMER_MAX 125
 #define TIMER_INC 4
 
 
@@ -40,7 +40,7 @@ void init_clock(void) {
  	TCCR0A |= (1 << WGM01); // CTC mode
  	TCCR0B |= (1 << CS02); // prescaler: 256
  	OCR0A = TIMER_MAX;
- 	TIMSK0 |= (1 << OCIE0A);
+ 	TIMSK |= (1 << OCIE0A);
  	sei();
 }
 
