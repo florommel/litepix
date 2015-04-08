@@ -2,7 +2,7 @@
  * main.h
  * This file is part of litepix
  *
- * Copyright (C) 2015 - Florian Rommel
+ * Copyright (C) 2015 - Florian Rommel, Michael Nieß
  *
  * litepix is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,12 +18,12 @@
  * along with litepix. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
-void test_pixels(void);
+#include <stdint.h>
 
-void test_transitions(void);
+void anim_dice(uint32_t duration_fade, uint32_t duration_hold, uint8_t *color, uint8_t *bg_color);
 
+void anim_swirl(uint8_t color[3],uint32_t duration, uint8_t start);
 #endif

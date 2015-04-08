@@ -1,8 +1,8 @@
 /*
- * test_pixels.c
+ * anim_swirl.c
  * This file is part of litepix
  *
- * Copyright (C) 2015 - Florian Rommel
+ * Copyright (C) 2015 - Michael Nieß
  *
  * litepix is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,26 +19,32 @@
  */
 
 
+#include <stdlib.h>
 #include "main.h"
-#include "core/timer.h"
 #include "core/pix.h"
+#include "util/transitions.h"
+#include "util/setter.h"
 
-
-void test_pixels(void) {
-    uint16_t x = PIX_NUM_BYTES-3;
-    
-    t_timer timer = TIMER_INIT(0);
-    
-    while (1) {
-        if (timer_test(&timer, 100)) {
-            pix_canvas[x++] = 0;
-            pix_canvas[x++] = 0;
-            pix_canvas[x++] = 0;
-            if (x >= PIX_NUM_BYTES) x = 0;
-            pix_canvas[x] = 255;
-            pix_canvas[x+1] = 255;
-            pix_canvas[x+2] = 255;
-            pix_render();
-        }
-    }
+//dim the current color
+static void dim_color(uint8_t *color){
+	color[0] = color[0] / 1.4;
+	color[1] = color[1] / 1.4;
+	color[2] = color[2] / 1.4;
 }
+
+//make a snake with fading colors
+void anim_swirl(uint8_t *color, uint32_t duration, uint8_t start) {
+    uint8_t buffer[PIX_NUM_BYTES];
+    uint8_t i;
+    uint8_t orig[] = {color[0], color[1], color[2]};
+    uint8_t a[] = {0,1,2,5,8,7,6,3};
+    for (i = start; i < start+8; i += 1)
+    {
+    	set_pixel(buffer,a[i%8],orig);
+    	dim_color(orig);
+    }
+    set_pixel(buffer,4,orig);
+    tr_fade_p(buffer,duration,NULL);
+}
+
+
