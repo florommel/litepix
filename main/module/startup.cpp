@@ -52,7 +52,7 @@ void Module::StartUp::animation() {
     canvas1.render();
     
     lsize--;
-    lval += 10;
+    lval += 12;
     
     if (lsize == 0) timer.set_delegate(DELEGATE(this, transition0));
 }
