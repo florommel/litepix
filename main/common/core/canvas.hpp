@@ -105,6 +105,7 @@ class Canvas {
     
     /**
      * Fill canvas with given color.
+     * @param   color   color which is used to fill canvas
      */
     void fill(const Color color);
     
@@ -112,6 +113,19 @@ class Canvas {
      * Fill canvas with randomly colored pixels.
      */
     void fill_random();
+    
+    /**
+     * Fill rect with given color.
+     * The parameters width and height can be negative.
+     * Tge rect's dimensions can exceed the canvas' dimensions.
+     * @param   x        x-position
+     * @param   y        y-position
+     * @param   width    rect width
+     * @param   height   rect height
+     * @param   color    color which is used to fill rect
+     */
+    void fill_rect(int8_t x, int8_t y, int8_t width, int8_t height,
+                   Color color);
     
     /**
      * Get pixel at specified index.

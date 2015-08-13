@@ -81,6 +81,20 @@ void Canvas::fill_random() {
 }
 
 
+void Canvas::fill_rect(int8_t x, int8_t y, int8_t width, int8_t height,
+                       Color color) {
+    int8_t cj = (height > 0) ? 1 : -1;
+    int8_t ci = (width > 0) ? 1 : -1;
+    for (int8_t j = y; j != y + height; j += cj) {
+        if (j < 0 || j > Canvas::Height - 1) continue;
+        for (int8_t i = x; i != x + width; i += ci) {
+            if (i < 0 || i > Canvas::Width - 1) continue;
+            set_pixel(i, j, color);
+        }
+    }
+}
+
+
 Color Canvas::get_pixel(uint16_t index) const {
     index *= 3;
     return Color(buffer[index+1], buffer[index], buffer[index+2]);

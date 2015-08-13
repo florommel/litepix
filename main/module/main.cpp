@@ -29,6 +29,7 @@
 #include "test_pixels2.hpp"
 #include "test_transitions.hpp"
 #include "tetris.hpp"
+#include "startup.hpp"
 
 
 #define CASE_RUN_MODULE(module_name) \
@@ -49,10 +50,9 @@ static const ModId StartUpModule = ModId::TestTransitions;
 static ModId next = StartUpModule;
 
 
-static inline void init() {
-    // render dark canvas
-    Canvas c;
-    c.render();
+static inline void start() {
+    StartUp ctx;
+    Mainloop::run();
 }
 
 
@@ -60,10 +60,11 @@ static inline void init() {
 __attribute__((OS_main))
 #endif
 int main(void) {
-    init();
+    start();
     
     while (true) {
         Input::clear_handler();
+        Input::clear_events();
         
         switch (next) {
             CASE_RUN_MODULE(Menu);
