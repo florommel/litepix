@@ -5,12 +5,15 @@
 
 NAME = litepix
 
-# subdirectories which contain source files
-SUBDIRS = core util
+# directories which contain source files
+SUBDIRS = common/core common/util module
 
 # architecture-specific subdirectories
-SUBDIRS_AVR = core/avr
-SUBDIRS_SIM = core/sim
+SUBDIRS_AVR = common/core/avr
+SUBDIRS_SIM = common/core/sim
+
+# add common dir to include path (-iquote)
+IQUOTE = -iquote common
 
 # default architeture (if ARCH=.. not specified on command line)
 ARCH = avr
@@ -38,11 +41,11 @@ $(info current target architecture is "$(ARCH)")
 
 
 BUILDSUBDIRS := $(patsubst %,$(BUILDDIR)/%,$(ALLSUBDIRS))
-SOURCES := $(foreach d,$(ALLSUBDIRS),$(call wildcard,$d/*.c)) $(wildcard *.c)
-OBJECTS := $(patsubst %.c,$(BUILDDIR)/%.o,$(SOURCES))
+SOURCES := $(foreach d,$(ALLSUBDIRS),$(call wildcard,$d/*.cpp))
+OBJECTS := $(patsubst %.cpp,$(BUILDDIR)/%.o,$(SOURCES))
 
 
-.PHONY: clean
+.PHONY: doc clean
 
 
 $(TARGET).elf: $(OBJECTS)
@@ -57,7 +60,7 @@ $(BUILDSUBDIRS):
 	@mkdir -p $@
 
 
-$(BUILDDIR)/%.o: %.c
+$(BUILDDIR)/%.o: %.cpp
 	@echo CC $<
 	@$(CC) $(CFLAGS) -MD -o $@ $<
 	@cp $(BUILDDIR)/$*.d $(BUILDDIR)/$*.P; \
@@ -69,6 +72,16 @@ $(BUILDDIR)/%.o: %.c
 -include $(OBJECTS:%.o=%.P)
 
 
+doc:
+	@echo generate documentation
+	@doxygen
+
+
+clean-doc:
+	@echo clean documentation
+	@rm -rfd doc
+
+
 clean:
 	@echo clean build directory
 	@rm -rfd $(BUILDDIR)
@@ -76,4 +89,4 @@ clean:
 
 clean-all:
 	@echo clean all build directories
-	@rm -rfd $(ALL_BUILDDIRS)
+	@rm -rfd $(ALL_BUILDDIRS) doc

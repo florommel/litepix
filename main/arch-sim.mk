@@ -3,9 +3,10 @@
 # notice and this notice are preserved.  This file is offered as-is,
 # without any warranty.
 
-CC = gcc
-CFLAGS = -ggdb -c -std=gnu99 -Wall -Wstrict-prototypes `pkg-config --cflags --libs gtk+-3.0`
-LDFLAGS = `pkg-config --cflags --libs gtk+-3.0` -Wall
+CC = g++
+CFLAGS = -ggdb -c -std=c++11 -Wall `pkg-config --cflags --libs gtk+-3.0` \
+         -D ARCH_SIM $(IQUOTE)
+LDFLAGS = `pkg-config --cflags --libs gtk+-3.0` -Wall $(IQUOTE)
 
 
 ALLSUBDIRS = $(SUBDIRS) $(SUBDIRS_SIM)

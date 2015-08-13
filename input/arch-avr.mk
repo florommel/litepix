@@ -3,17 +3,14 @@
 # notice and this notice are preserved.  This file is offered as-is,
 # without any warranty.
 
-MCU = atmega328p
-DF_CPU = 16000000
+MCU = attiny2313
+DF_CPU = 8000000
 AVRDUDE_FLAGS=-c usbasp
 
 CC = avr-g++
 CFLAGS = -c -std=c++11 -mmcu=$(MCU) -D F_CPU=$(DF_CPU) -D ARCH_AVR -Os \
-	     -fpack-struct -fshort-enums -Wall $(IQUOTE)
-LDFLAGS = -mmcu=$(MCU) -Wall $(IQUOTE)
-
-
-ALLSUBDIRS = $(SUBDIRS) $(SUBDIRS_AVR)
+	     -fpack-struct -fshort-enums -Wall
+LDFLAGS = -mmcu=$(MCU) -Wall
 
 
 TARGET = $(BUILDDIR)/$(NAME)

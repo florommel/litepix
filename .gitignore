@@ -1,2 +1,4 @@
-build-avr
-build-sim
+build-avr/
+build-sim/
+build/
+doc/
