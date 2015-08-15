@@ -7,17 +7,17 @@ with WS2811 RGB (or similar) controllers.  It can currently be compiled for
 Atmel AVR8 microcontrollers but could probably be ported to other architectures.
 
 The communication with the WS2811 controllers and the whole processing
-(including animations and small games or other applications) is  done on a
-single microcontroller.  Currently this is an ATmega clocked with 16Mhz and at
-least 2048 bytes of RAM.  User Input (through several devices like ir remotes
-or bluetooth) is be captured by another controller and sent to the main
-controller via usart.
+(including animations and small games or other applications) is done on a single
+microcontroller.  Currently this is an ATmega clocked with 16Mhz and at least
+2048 bytes of RAM.  User input (through several devices like ir remotes or
+bluetooth (not implemented yet)) is captured by another controller and sent to
+the main controller via USART.
 
-The implementation for the main controller is located in `main`
-The implementation for the input controller is located in `input`
+The implementation for the main controller is located in `main`.
+The implementation for the input controller is located in `input`.
 
-There is a simulator integrated which allows you to test the program on your
-computer without any additional hardware required (gtk3 is needed).
+There is a simulator integrated which allows to test the program on a computer
+without any additional hardware required (gtk3 is needed).
 
 
 ## Compile and program
