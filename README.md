@@ -2,9 +2,9 @@
 
 ## General Information
 
-Litepix is a lightweight software to run a led pixel matrix build with WS2811
-RGB (or similar) controllers.  It can currently be compiled for Atmel AVR8
-microcontrollers but could probably be ported to other architectures as well.
+Litepix is a lightweight software application to run a led pixel matrix build
+with WS2811 RGB (or similar) controllers.  It can currently be compiled for
+Atmel AVR8 microcontrollers but could probably be ported to other architectures.
 
 The communication with the WS2811 controllers and the whole processing
 (including animations and small games or other applications) is  done on a
