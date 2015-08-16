@@ -96,5 +96,6 @@ void Input::clear_handler() {
 
 
 void Input::clear_events() {
-    request = MasterClearRequest;
+    // TODO
+    //request = MasterClearRequest;
 }
