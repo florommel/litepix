@@ -87,7 +87,7 @@ static inline void inc(uint8_t& value, uint8_t amount) {
 
 
 Menu::Menu() : curr_index(0) {
-    paint_page_icons(false);
+    paint_page(false);
     transition.set_source(canvas1);
     transition.set_destination(canvas2);
     transition.fade(800, DELEGATE(this, fade_in_finished));
@@ -115,7 +115,8 @@ void Menu::paint_icon(uint8_t index, bool highlight) {
 }
 
 
-void Menu::paint_page_icons(bool highlight) {
+void Menu::paint_page(bool highlight) {
+    canvas1.fill(0x000000);
     uint8_t page = curr_index / PageIconNum;
     uint8_t offset = page * PageIconNum;
     for (uint8_t i = offset; i < offset + PageIconNum; i++) {
@@ -141,6 +142,7 @@ void Menu::input(Input i) {
         case Input::Down:
             if (curr_index < size_of_array(modules) - ColNum)
                 curr_index += ColNum;
+            else curr_index = size_of_array(modules) - 1;
             break;
         case Input::Ok:
             run_current();
@@ -148,7 +150,7 @@ void Menu::input(Input i) {
         default: break;
     }
     
-    pulse0();
+    move();
 }
 
 
@@ -160,14 +162,20 @@ void Menu::fade_in_finished() {
 
 
 void Menu::pulse0() {
-    paint_page_icons(true);
+    paint_page(true);
     transition.fade(500, DELEGATE(this, pulse1));
 }
 
 
 void Menu::pulse1() {
-    paint_page_icons(false);
+    paint_page(false);
     transition.fade(700, DELEGATE(this, pulse0));
+}
+
+
+void Menu::move() {
+    paint_page(true);
+    transition.fade(200, DELEGATE(this, pulse1));
 }
 
 

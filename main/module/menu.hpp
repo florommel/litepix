@@ -41,12 +41,13 @@ namespace Module {
         ModId curr_module;
         
         void paint_icon(uint8_t index, bool highlight);
-        void paint_page_icons(bool highlight);
+        void paint_page(bool highlight);
         
         void input(Input i);
         void fade_in_finished();
         void pulse0();
         void pulse1();
+        void move();
         void run_current();
         void run_current0();
         void run_current1();
