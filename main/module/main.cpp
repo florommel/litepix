@@ -44,8 +44,8 @@
 using namespace Module;
 
 
-static const ModId StdModule = ModId::TestTransitions;
-static const ModId StartUpModule = ModId::TestTransitions;
+static const ModId StdModule = ModId::Menu;
+static const ModId StartUpModule = ModId::Menu;
 
 static ModId next = StartUpModule;
 

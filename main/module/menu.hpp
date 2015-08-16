@@ -25,6 +25,7 @@
 #include "core/canvas.hpp"
 #include "core/input.hpp"
 #include "util/transition.hpp"
+#include "main.hpp"
 
 namespace Module {
     
@@ -33,11 +34,22 @@ namespace Module {
         Menu();
         
       private:
-        Canvas canvas;
+        Canvas canvas1;
+        Canvas canvas2;
         Transition transition;
+        uint8_t curr_index;
+        ModId curr_module;
+        
+        void paint_icon(uint8_t index, bool highlight);
+        void paint_page_icons(bool highlight);
         
         void input(Input i);
-        void start_tetris();
+        void fade_in_finished();
+        void pulse0();
+        void pulse1();
+        void run_current();
+        void run_current0();
+        void run_current1();
     };
     
 }

@@ -20,28 +20,173 @@
 
 
 #include "core/delegate.hpp"
+#include "core/progmem.hpp"
 #include "menu.hpp"
 #include "main.hpp"
 
 using namespace Module;
 
+struct ModuleInfo {
+    ModId module;
+    const Color* icon;
+    
+    constexpr ModuleInfo(ModId module, const Color* icon)
+        : module(module), icon(icon) {}
+};
 
-Menu::Menu() {
-    Input::set_handler(DELEGATE(this, input));
-    canvas.fill(0x500000);
-    canvas.render();
-    transition.set_destination(canvas);
+static const uint8_t HighlightInc = 0x60;
+static const uint8_t IconWidth = 5;
+static const uint8_t IconHeight = 4;
+static const uint8_t IconPixels = IconWidth * IconHeight;
+static const uint8_t ColNum = (Canvas::Width - 2) / (IconWidth + 1);
+static const uint8_t RowNum = (Canvas::Height - 2) / (IconHeight + 1);
+static const uint8_t PageIconNum = ColNum * RowNum;
+
+static const Color StdIcon[IconPixels] PROGMEM = {
+    0x000000, 0x885000, 0x885000, 0x885000, 0x000000,
+    0x000000, 0x000000, 0x000000, 0x885000, 0x000000,
+    0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
+    0x000000, 0x000000, 0x885000, 0x000000, 0x000000
+};
+
+static const Color TetrisIcon[IconPixels] PROGMEM = {
+    0x000000, 0x000000, 0x008880, 0x000000, 0x000088,
+    0x000000, 0x885500, 0x008880, 0x008880, 0x000088,
+    0x885500, 0x885500, 0x008880, 0x880000, 0x000088,
+    0x885500, 0x880000, 0x880000, 0x880000, 0x000088
+};
+
+static const ModuleInfo modules[] PROGMEM = {
+    ModuleInfo(ModId::AniTest, StdIcon),
+    ModuleInfo(ModId::TestInput, StdIcon),
+    ModuleInfo(ModId::TestPixels, StdIcon),
+    ModuleInfo(ModId::TestPixels2, StdIcon),
+    ModuleInfo(ModId::TestTransitions, StdIcon),
+    ModuleInfo(ModId::Tetris, TetrisIcon),
+};
+
+
+template <typename T, uint8_t N>
+constexpr uint8_t size_of_array(const T(&)[N]) {
+    return N;
+}
+
+
+static inline void calc_pos(uint8_t& x, uint8_t& y, const uint8_t page_index) {
+    uint8_t row = page_index / ColNum;
+    uint8_t col = page_index % ColNum;
+    x = 1 + col * (IconWidth + 1);
+    y = 1 + row * (IconHeight + 1);
+}
+
+
+static inline void inc(uint8_t& value, uint8_t amount) {
+    if (value >= 0xFF - amount) value = 0xFF;
+    else value += amount;
+}
+
+
+Menu::Menu() : curr_index(0) {
+    paint_page_icons(false);
+    transition.set_source(canvas1);
+    transition.set_destination(canvas2);
+    transition.fade(800, DELEGATE(this, fade_in_finished));
+}
+
+
+void Menu::paint_icon(uint8_t index, bool highlight) {
+    const Color* progmem_icon = Progmem::read(modules, index).icon;
+    uint8_t page = index / PageIconNum;
+    uint8_t offset = page * PageIconNum;
+    uint8_t x, y;
+    calc_pos(x, y, index - offset);
+    
+    for (uint8_t j = 0; j < IconHeight; j++) {
+        for (uint8_t i = 0; i < IconWidth; i++) {
+            Color pixel = Progmem::read(progmem_icon, j * IconWidth + i);
+            if (highlight && (pixel.red || pixel.green || pixel.blue)) {
+                inc(pixel.red, HighlightInc);
+                inc(pixel.green, HighlightInc);
+                inc(pixel.blue, HighlightInc);
+            }
+            canvas1.set_pixel(x + i, y + j, pixel);
+        }
+    }
+}
+
+
+void Menu::paint_page_icons(bool highlight) {
+    uint8_t page = curr_index / PageIconNum;
+    uint8_t offset = page * PageIconNum;
+    for (uint8_t i = offset; i < offset + PageIconNum; i++) {
+        if (i >= size_of_array(modules)) break;
+        paint_icon(i, highlight && curr_index == i);
+    }
 }
 
 
 void Menu::input(Input i) {
-    transition.set_source(0x000000);
+    switch (i.data) {
+        case Input::Left:
+            if (curr_index > 0) curr_index--;
+            break;
+        case Input::Right:
+            if (curr_index < size_of_array(modules) - 1)
+                curr_index++;
+            break;
+        case Input::Up:
+            if (curr_index >= ColNum)
+                curr_index -= ColNum;
+            break;
+        case Input::Down:
+            if (curr_index < size_of_array(modules) - ColNum)
+                curr_index += ColNum;
+            break;
+        case Input::Ok:
+            run_current();
+            return;
+        default: break;
+    }
     
-    if (i.data == Input::Ok)
-        transition.dissolve(1000, DELEGATE(this, start_tetris));
+    pulse0();
 }
 
 
-void Menu::start_tetris() {
-    invoke(ModId::Tetris);
+void Menu::fade_in_finished() {
+    Input::set_handler(DELEGATE(this, input));
+    Input::clear_events();
+    pulse0();
+}
+
+
+void Menu::pulse0() {
+    paint_page_icons(true);
+    transition.fade(500, DELEGATE(this, pulse1));
+}
+
+
+void Menu::pulse1() {
+    paint_page_icons(false);
+    transition.fade(700, DELEGATE(this, pulse0));
+}
+
+
+void Menu::run_current() {
+    Input::clear_handler();
+    
+    canvas1.fill(0x000000);
+    paint_icon(curr_index, false);
+    transition.fade(800, DELEGATE(this, run_current0));
+}
+
+
+void Menu::run_current0() {
+    transition.set_source(0x000000);
+    transition.fade(800, DELEGATE(this, run_current1));
+}
+
+
+void Menu::run_current1() {
+    auto m_info = Progmem::read(modules, curr_index);
+    invoke(m_info.module);
 }
