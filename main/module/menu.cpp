@@ -42,11 +42,39 @@ static const uint8_t ColNum = (Canvas::Width - 2) / (IconWidth + 1);
 static const uint8_t RowNum = (Canvas::Height - 2) / (IconHeight + 1);
 static const uint8_t PageIconNum = ColNum * RowNum;
 
-static const Color StdIcon[IconPixels] PROGMEM = {
+/*static const Color StdIcon[IconPixels] PROGMEM = {
     0x000000, 0x885000, 0x885000, 0x885000, 0x000000,
     0x000000, 0x000000, 0x000000, 0x885000, 0x000000,
     0x000000, 0x000000, 0x000000, 0x000000, 0x000000,
     0x000000, 0x000000, 0x885000, 0x000000, 0x000000
+};*/
+
+static const Color AniTestIcon[IconPixels] PROGMEM = {
+    0x000000, 0x280b00, 0x481400, 0x521700, 0x000000,
+    0x481400, 0x4a1500, 0x521700, 0x2e0d00, 0x481400,
+    0x280b00, 0x2e0d00, 0x280b00, 0x521700, 0x280b00,
+    0x000000, 0x481400, 0x581900, 0x280b00, 0x000000
+};
+
+static const Color TestInputIcon[IconPixels] PROGMEM = {
+    0x900000, 0x900000, 0x900000, 0x301000, 0x301000,
+    0x900000, 0x900000, 0x900000, 0x301000, 0x301000,
+    0x900000, 0x900000, 0x900000, 0x301000, 0x301000,
+    0x900000, 0x900000, 0x900000, 0x301000, 0x301000
+};
+
+static const Color TestPixels2Icon[IconPixels] PROGMEM = {
+    0x006600, 0x006600, 0x006600, 0x006600, 0x006600,
+    0x000000, 0x000000, 0x006600, 0x000000, 0x000000,
+    0x000000, 0x000000, 0x006600, 0x000000, 0x000000,
+    0x000000, 0x000000, 0x006600, 0x000000, 0x000000
+};
+
+static const Color TestTransitionsIcon[IconPixels] PROGMEM = {
+    0x000000, 0x800080, 0x000000, 0x800080, 0x000000,
+    0x800080, 0x000000, 0x800080, 0x000000, 0x800080,
+    0x000000, 0x800080, 0x000000, 0x800080, 0x000000,
+    0x800080, 0x000000, 0x800080, 0x000000, 0x800080
 };
 
 static const Color TetrisIcon[IconPixels] PROGMEM = {
@@ -57,11 +85,10 @@ static const Color TetrisIcon[IconPixels] PROGMEM = {
 };
 
 static const ModuleInfo modules[] PROGMEM = {
-    ModuleInfo(ModId::AniTest, StdIcon),
-    ModuleInfo(ModId::TestInput, StdIcon),
-    ModuleInfo(ModId::TestPixels, StdIcon),
-    ModuleInfo(ModId::TestPixels2, StdIcon),
-    ModuleInfo(ModId::TestTransitions, StdIcon),
+    ModuleInfo(ModId::AniTest, AniTestIcon),
+    ModuleInfo(ModId::TestInput, TestInputIcon),
+    ModuleInfo(ModId::TestPixels2, TestPixels2Icon),
+    ModuleInfo(ModId::TestTransitions, TestTransitionsIcon),
     ModuleInfo(ModId::Tetris, TetrisIcon),
 };
 

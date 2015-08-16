@@ -80,5 +80,7 @@ void AniTest::input(Input in) {
             int_matrix0[n] = 0;
             up_mask0.bit_reset(n);
         }
+    } else if (in.data == Input::Exit) {
+        exit();
     }
 }
