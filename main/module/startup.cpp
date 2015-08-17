@@ -60,20 +60,20 @@ void Module::StartUp::animation() {
 
 void Module::StartUp::transition0() {
     timer.stop();
-    paintl(0xff6666);
+    paintl(0xff4444);
     transition.fade(1000, DELEGATE(this, transition1));
 }
 
 
 void Module::StartUp::transition1() {
-    canvas2.fill(0x000022);
+    canvas2.fill(0x000010);
     paintl(0x000000);
     transition.fade(1000, DELEGATE(this, transition2));
 }
 
 
 void Module::StartUp::transition2() {
-    canvas2.fill(0x0044ee);
+    canvas2.fill(0x0033dd);
     paintl(0x000000);
     transition.roll(Direction::LeftRight, 700, DELEGATE(this, transition3));
 }
