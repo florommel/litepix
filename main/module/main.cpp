@@ -29,6 +29,7 @@
 #include "test_pixels2.hpp"
 #include "test_transitions.hpp"
 #include "tetris.hpp"
+#include "snake.hpp"
 #include "startup.hpp"
 
 
@@ -73,6 +74,7 @@ int main(void) {
             CASE_RUN_MODULE(TestPixels);
             CASE_RUN_MODULE(TestPixels2);
             CASE_RUN_MODULE(TestTransitions);
+            CASE_RUN_MODULE(Snake);
             CASE_RUN_MODULE(Tetris);
             default: break;
         }

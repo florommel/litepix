@@ -58,13 +58,6 @@ static const Color AniTestIcon[IconPixels] PROGMEM = {
     0x000000, 0x481400, 0x581900, 0x280b00, 0x000000
 };
 
-static const Color TestInputIcon[IconPixels] PROGMEM = {
-    0x500000, 0x500000, 0x500000, 0x301000, 0x301000,
-    0x500000, 0x500000, 0x500000, 0x301000, 0x301000,
-    0x500000, 0x500000, 0x500000, 0x301000, 0x301000,
-    0x500000, 0x500000, 0x500000, 0x301000, 0x301000
-};
-
 static const Color TestPixels2Icon[IconPixels] PROGMEM = {
     0x005000, 0x005000, 0x005000, 0x005000, 0x005000,
     0x000000, 0x000000, 0x005000, 0x000000, 0x000000,
@@ -79,6 +72,13 @@ static const Color TestTransitionsIcon[IconPixels] PROGMEM = {
     0x500050, 0x000000, 0x500050, 0x000000, 0x500050
 };
 
+static const Color SnakeIcon[IconPixels] PROGMEM = {
+    0x000050, 0x000000, 0x000000, 0x000000, 0x000000,
+    0x000050, 0x000050, 0x000050, 0x000050, 0x000050,
+    0x000000, 0x000000, 0x000000, 0x000000, 0x000050,
+    0x000000, 0x500000, 0x000000, 0x000050, 0x000050
+};
+
 static const Color TetrisIcon[IconPixels] PROGMEM = {
     0x000000, 0x000000, 0x005044, 0x000000, 0x000050,
     0x000000, 0x503000, 0x005044, 0x005044, 0x000050,
@@ -88,10 +88,10 @@ static const Color TetrisIcon[IconPixels] PROGMEM = {
 
 static const ModuleInfo modules[] PROGMEM = {
     ModuleInfo(ModId::AniTest, AniTestIcon),
-    ModuleInfo(ModId::TestInput, TestInputIcon),
     ModuleInfo(ModId::TestPixels2, TestPixels2Icon),
     ModuleInfo(ModId::TestTransitions, TestTransitionsIcon),
-    ModuleInfo(ModId::Tetris, TetrisIcon),
+    ModuleInfo(ModId::Snake, SnakeIcon),
+    ModuleInfo(ModId::Tetris, TetrisIcon)
 };
 
 

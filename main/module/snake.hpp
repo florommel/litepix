@@ -1,5 +1,5 @@
 /*
- * main.hpp
+ * snake.hpp
  * This file is part of Litepix
  *
  * Copyright (C) 2015 - Florian Rommel
@@ -19,43 +19,44 @@
  */
 
 
-#ifndef _MAIN_HPP_
-#define _MAIN_HPP_
+#ifndef _SNAKE_HPP_
+#define _SNAKE_HPP_
 
 #include <stdint.h>
+#include "core/input.hpp"
+#include "core/canvas.hpp"
+#include "core/container.hpp"
+#include "util/transition.hpp"
 
-/**
- * Contains Litepix modules.
- */
 namespace Module {
     
-    /**
-     * Identifies a Litepix module.
-     */
-    enum class ModId : uint8_t {
-        Menu,
-        AniTest,
-        TestInput,
-        TestPixels,
-        TestPixels2,
-        TestTransitions,
-        Snake,
-        Tetris
+    class Snake {
+      public:
+        enum class Type : uint8_t {
+            Empty = 0, PartLeft, PartRight, PartUp, PartDown, Food
+        };
+        
+        Snake();
+        
+      private:
+        Canvas canvas;
+        Transition transition;
+        Timer move_timer;
+        CanvasMatrix<Type> field;
+        uint8_t head_x;
+        uint8_t head_y;
+        uint8_t tail_x;
+        uint8_t tail_y;
+        Type prev;
+        
+        void game_over();
+        void move();
+        void place_food();
+        void input(Input i);
+        void render();
     };
     
-    /**
-     * Exit current mainloop (module) as fast as possible (usually after current
-     * event handler (timer or input) returns) and invoke a new module.
-     * @param   m   the module to be invoked
-     */
-    void invoke(ModId m);
-    
-    /**
-     * Exit current mainloop (module) as fast as possible (usually after current
-     * event handler (timer or input) returns).
-     * Calls Mainloop:exit().
-     */
-    void exit();
 }
+
 
 #endif
