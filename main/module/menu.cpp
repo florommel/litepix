@@ -26,6 +26,7 @@
 
 using namespace Module;
 
+
 struct ModuleInfo {
     ModId module;
     const Color* icon;
@@ -34,13 +35,14 @@ struct ModuleInfo {
         : module(module), icon(icon) {}
 };
 
-static const uint8_t HighlightInc = 0x60;
+
 static const uint8_t IconWidth = 5;
 static const uint8_t IconHeight = 4;
 static const uint8_t IconPixels = IconWidth * IconHeight;
 static const uint8_t ColNum = (Canvas::Width - 2) / (IconWidth + 1);
 static const uint8_t RowNum = (Canvas::Height - 2) / (IconHeight + 1);
 static const uint8_t PageIconNum = ColNum * RowNum;
+
 
 /*static const Color StdIcon[IconPixels] PROGMEM = {
     0x000000, 0x885000, 0x885000, 0x885000, 0x000000,
@@ -57,31 +59,31 @@ static const Color AniTestIcon[IconPixels] PROGMEM = {
 };
 
 static const Color TestInputIcon[IconPixels] PROGMEM = {
-    0x900000, 0x900000, 0x900000, 0x301000, 0x301000,
-    0x900000, 0x900000, 0x900000, 0x301000, 0x301000,
-    0x900000, 0x900000, 0x900000, 0x301000, 0x301000,
-    0x900000, 0x900000, 0x900000, 0x301000, 0x301000
+    0x500000, 0x500000, 0x500000, 0x301000, 0x301000,
+    0x500000, 0x500000, 0x500000, 0x301000, 0x301000,
+    0x500000, 0x500000, 0x500000, 0x301000, 0x301000,
+    0x500000, 0x500000, 0x500000, 0x301000, 0x301000
 };
 
 static const Color TestPixels2Icon[IconPixels] PROGMEM = {
-    0x006600, 0x006600, 0x006600, 0x006600, 0x006600,
-    0x000000, 0x000000, 0x006600, 0x000000, 0x000000,
-    0x000000, 0x000000, 0x006600, 0x000000, 0x000000,
-    0x000000, 0x000000, 0x006600, 0x000000, 0x000000
+    0x005000, 0x005000, 0x005000, 0x005000, 0x005000,
+    0x000000, 0x000000, 0x005000, 0x000000, 0x000000,
+    0x000000, 0x000000, 0x005000, 0x000000, 0x000000,
+    0x000000, 0x000000, 0x005000, 0x000000, 0x000000
 };
 
 static const Color TestTransitionsIcon[IconPixels] PROGMEM = {
-    0x000000, 0x800080, 0x000000, 0x800080, 0x000000,
-    0x800080, 0x000000, 0x800080, 0x000000, 0x800080,
-    0x000000, 0x800080, 0x000000, 0x800080, 0x000000,
-    0x800080, 0x000000, 0x800080, 0x000000, 0x800080
+    0x000000, 0x500050, 0x000000, 0x500050, 0x000000,
+    0x500050, 0x000000, 0x500050, 0x000000, 0x500050,
+    0x000000, 0x500050, 0x000000, 0x500050, 0x000000,
+    0x500050, 0x000000, 0x500050, 0x000000, 0x500050
 };
 
 static const Color TetrisIcon[IconPixels] PROGMEM = {
-    0x000000, 0x000000, 0x008880, 0x000000, 0x000088,
-    0x000000, 0x885500, 0x008880, 0x008880, 0x000088,
-    0x885500, 0x885500, 0x008880, 0x880000, 0x000088,
-    0x885500, 0x880000, 0x880000, 0x880000, 0x000088
+    0x000000, 0x000000, 0x005044, 0x000000, 0x000050,
+    0x000000, 0x503000, 0x005044, 0x005044, 0x000050,
+    0x503000, 0x503000, 0x005044, 0x500000, 0x000050,
+    0x503000, 0x500000, 0x500000, 0x500000, 0x000050
 };
 
 static const ModuleInfo modules[] PROGMEM = {
@@ -107,9 +109,10 @@ static inline void calc_pos(uint8_t& x, uint8_t& y, const uint8_t page_index) {
 }
 
 
-static inline void inc(uint8_t& value, uint8_t amount) {
-    if (value >= 0xFF - amount) value = 0xFF;
-    else value += amount;
+static inline void rel_inc(uint8_t& value) {
+    uint16_t x = (value + 0x10) * 2;
+    if (x > 0xFF) value = 0xFF;
+    else value = x;
 }
 
 
@@ -132,9 +135,9 @@ void Menu::paint_icon(uint8_t index, bool highlight) {
         for (uint8_t i = 0; i < IconWidth; i++) {
             Color pixel = Progmem::read(progmem_icon, j * IconWidth + i);
             if (highlight && (pixel.red || pixel.green || pixel.blue)) {
-                inc(pixel.red, HighlightInc);
-                inc(pixel.green, HighlightInc);
-                inc(pixel.blue, HighlightInc);
+                rel_inc(pixel.red);
+                rel_inc(pixel.green);
+                rel_inc(pixel.blue);
             }
             canvas1.set_pixel(x + i, y + j, pixel);
         }
@@ -210,14 +213,14 @@ void Menu::run_current() {
     Input::clear_handler();
     
     canvas1.fill(0x000000);
-    paint_icon(curr_index, false);
+    paint_icon(curr_index, true);
     transition.fade(800, DELEGATE(this, run_current0));
 }
 
 
 void Menu::run_current0() {
     transition.set_source(0x000000);
-    transition.fade(800, DELEGATE(this, run_current1));
+    transition.fade(1000, DELEGATE(this, run_current1));
 }
 
 
