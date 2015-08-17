@@ -181,7 +181,7 @@ void Snake::render() {
     static const uint8_t hue_min = 0x7a;
     static const uint8_t hue_max = 0xaa;
     uint8_t hue = hue_max;
-    uint8_t hue_inc;
+    uint8_t hue_inc = -2;
     uint8_t x = tail_x;
     uint8_t y = tail_y;
     while (true) {
