@@ -39,9 +39,9 @@ namespace Module {
         Snake();
         
       private:
-        Canvas canvas;
+        Canvas canvas1;
+        Canvas canvas2;
         Transition transition;
-        Timer move_timer;
         CanvasMatrix<Type> field;
         uint8_t head_x;
         uint8_t head_y;

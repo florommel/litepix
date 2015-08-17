@@ -29,6 +29,8 @@ using Module::Snake;
 static const uint8_t mx = Canvas::Width / 2 - 1;
 static const uint8_t my = Canvas::Height / 2 - 1;
 
+static const uint8_t snake_speed = 150;
+
 
 static void inc(uint8_t& value, uint8_t max) {
     if (value >= max) value = 0;
@@ -43,76 +45,80 @@ static void dec(uint8_t& value, uint8_t max) {
 
 
 Snake::Snake()
-: move_timer(DELEGATE(this, move), 200), head_x(mx+1), head_y(my),
-  tail_x(mx-1), tail_y(my), prev(Type::PartRight) {
+: head_x(mx+1), head_y(my), tail_x(mx-1),
+  tail_y(my), prev(Type::PartRight) {
+    Input::set_handler(DELEGATE(this, input));
+    transition.set_destination(canvas1);
+    transition.set_source(canvas2);
+    transition.fade(800, DELEGATE(this, move));
     
     field.set(mx-1, my, Type::PartRight);
     field.set(mx, my, Type::PartRight);
     field.set(mx+1, my, Type::PartRight);
     place_food();
     render();
-    
-    Input::set_handler(DELEGATE(this, input));
-    move_timer.start();
 }
 
 
 void Snake::game_over() {
-    move_timer.stop();
+    // TODO
 }
 
 
 void Snake::move() {
-    Type h = field.get(head_x, head_y);
-    prev = h;
-    switch (h) {
-        case Type::PartLeft:
-            dec(head_x, Canvas::Width-1);
-            break;
-        case Type::PartRight:
-            inc(head_x, Canvas::Width-1);
-            break;
-        case Type::PartUp:
-            dec(head_y, Canvas::Height-1);
-            break;
-        case Type::PartDown:
-            inc(head_y, Canvas::Height-1);
-            break;
-        default: return;
-    }
-    
-    Type t = field.get(head_x, head_y);
-    bool eat = (t == Type::Food);
-    if (t != Type::Empty && t != Type::Food) {
-        game_over();
-        return;
-    }
-    
-    field.set(head_x, head_y, h);
-    
-    if (eat) {
-        place_food();
-    } else {
-        Type t = field.get(tail_x, tail_y);
-        field.set(tail_x, tail_y, Type::Empty);
-        switch (t) {
+    {
+        Type h = field.get(head_x, head_y);
+        prev = h;
+        switch (h) {
             case Type::PartLeft:
-                dec(tail_x, Canvas::Width-1);
+                dec(head_x, Canvas::Width-1);
                 break;
             case Type::PartRight:
-                inc(tail_x, Canvas::Width-1);
+                inc(head_x, Canvas::Width-1);
                 break;
             case Type::PartUp:
-                dec(tail_y, Canvas::Height-1);
+                dec(head_y, Canvas::Height-1);
                 break;
             case Type::PartDown:
-                inc(tail_y, Canvas::Height-1);
+                inc(head_y, Canvas::Height-1);
                 break;
             default: return;
+        }
+        
+        Type t = field.get(head_x, head_y);
+        bool eat = (t == Type::Food);
+        if (t != Type::Empty && t != Type::Food) {
+            game_over();
+            return;
+        }
+        
+        field.set(head_x, head_y, h);
+        
+        if (eat) {
+            place_food();
+        } else {
+            Type t = field.get(tail_x, tail_y);
+            field.set(tail_x, tail_y, Type::Empty);
+            switch (t) {
+                case Type::PartLeft:
+                    dec(tail_x, Canvas::Width-1);
+                    break;
+                case Type::PartRight:
+                    inc(tail_x, Canvas::Width-1);
+                    break;
+                case Type::PartUp:
+                    dec(tail_y, Canvas::Height-1);
+                    break;
+                case Type::PartDown:
+                    inc(tail_y, Canvas::Height-1);
+                    break;
+                default: return;
+            }
         }
     }
     
     render();
+    transition.fade(snake_speed, DELEGATE(this, move));
 }
 
 
@@ -163,18 +169,43 @@ void Snake::render() {
     for (uint16_t i = 0; i < Canvas::Pixels; i++) {
         switch (field[i]) {
             case Type::Empty:
-                canvas.set_pixel(i, 0x000000);
-                break;
-            case Type::PartLeft:
-            case Type::PartRight:
-            case Type::PartUp:
-            case Type::PartDown:
-                canvas.set_pixel(i, 0x0000ff);
+                canvas2.set_pixel(i, 0x000000);
                 break;
             case Type::Food:
-                canvas.set_pixel(i, 0xff0000);
+                canvas2.set_pixel(i, 0xff0000);
                 break;
+            default: break;
         }
     }
-    canvas.render();
+    
+    static const uint8_t hue_min = 0x7a;
+    static const uint8_t hue_max = 0xaa;
+    uint8_t hue = hue_max;
+    uint8_t hue_inc;
+    uint8_t x = tail_x;
+    uint8_t y = tail_y;
+    while (true) {
+        canvas2.set_pixel(x, y, Color::fromHSV(hue, 0xee, 0xff));
+        if (hue <= hue_min) hue_inc = 2;
+        else if (hue >= hue_max) hue_inc = -2;
+        hue += hue_inc;
+        
+        if (x == head_x && y == head_y) break;
+        
+        switch (field.get(x, y)) {
+            case Type::PartLeft:
+                dec(x, Canvas::Width-1);
+                break;
+            case Type::PartRight:
+                inc(x, Canvas::Width-1);
+                break;
+            case Type::PartUp:
+                dec(y, Canvas::Height-1);
+                break;
+            case Type::PartDown:
+                inc(y, Canvas::Height-1);
+                break;
+            default: return;
+        }
+    }
 }
