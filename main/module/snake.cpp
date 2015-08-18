@@ -32,15 +32,34 @@ static const uint8_t my = Canvas::Height / 2 - 1;
 static const uint8_t snake_speed = 150;
 
 
-static void inc(uint8_t& value, uint8_t max) {
+static inline void inc(uint8_t& value, uint8_t max) {
     if (value >= max) value = 0;
     else value++;
 }
 
 
-static void dec(uint8_t& value, uint8_t max) {
+static inline void dec(uint8_t& value, uint8_t max) {
     if (value == 0) value = max;
     else value--;
+}
+
+
+static void follow_direction(uint8_t& x, uint8_t& y, const Snake::Type move) {
+    switch (move) {
+        case Snake::Type::PartLeft:
+            dec(x, Canvas::Width-1);
+            break;
+        case Snake::Type::PartRight:
+            inc(x, Canvas::Width-1);
+            break;
+        case Snake::Type::PartUp:
+            dec(y, Canvas::Height-1);
+            break;
+        case Snake::Type::PartDown:
+            inc(y, Canvas::Height-1);
+            break;
+        default: break;
+    }
 }
 
 
@@ -67,23 +86,8 @@ void Snake::game_over() {
 
 void Snake::move() {
     {
-        Type h = field.get(head_x, head_y);
-        prev = h;
-        switch (h) {
-            case Type::PartLeft:
-                dec(head_x, Canvas::Width-1);
-                break;
-            case Type::PartRight:
-                inc(head_x, Canvas::Width-1);
-                break;
-            case Type::PartUp:
-                dec(head_y, Canvas::Height-1);
-                break;
-            case Type::PartDown:
-                inc(head_y, Canvas::Height-1);
-                break;
-            default: return;
-        }
+        prev = field.get(head_x, head_y);
+        follow_direction(head_x, head_y, prev);
         
         Type t = field.get(head_x, head_y);
         bool eat = (t == Type::Food);
@@ -92,28 +96,14 @@ void Snake::move() {
             return;
         }
         
-        field.set(head_x, head_y, h);
+        field.set(head_x, head_y, prev);
         
         if (eat) {
             place_food();
         } else {
             Type t = field.get(tail_x, tail_y);
             field.set(tail_x, tail_y, Type::Empty);
-            switch (t) {
-                case Type::PartLeft:
-                    dec(tail_x, Canvas::Width-1);
-                    break;
-                case Type::PartRight:
-                    inc(tail_x, Canvas::Width-1);
-                    break;
-                case Type::PartUp:
-                    dec(tail_y, Canvas::Height-1);
-                    break;
-                case Type::PartDown:
-                    inc(tail_y, Canvas::Height-1);
-                    break;
-                default: return;
-            }
+            follow_direction(tail_x, tail_y, t);
         }
     }
     
@@ -192,20 +182,6 @@ void Snake::render() {
         
         if (x == head_x && y == head_y) break;
         
-        switch (field.get(x, y)) {
-            case Type::PartLeft:
-                dec(x, Canvas::Width-1);
-                break;
-            case Type::PartRight:
-                inc(x, Canvas::Width-1);
-                break;
-            case Type::PartUp:
-                dec(y, Canvas::Height-1);
-                break;
-            case Type::PartDown:
-                inc(y, Canvas::Height-1);
-                break;
-            default: return;
-        }
+        follow_direction(x, y, field.get(x, y));
     }
 }
