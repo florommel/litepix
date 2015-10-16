@@ -36,7 +36,7 @@
  * The timer delegate (task) is periodically executed.
  * Requires a running main loop (Mainloop::run()).
  */
-class Timer {
+class Timer final {
   public:
     
     /**
