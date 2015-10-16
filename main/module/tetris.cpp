@@ -179,12 +179,10 @@ void Tetris::remove_rows_finish() {
 
 
 void Tetris::new_tetromino() {
-    falling = {
-        .type = (TetType)((Random::get_uint() % 7)+1),
-        .rotation = (uint8_t)(Random::get_uint() % 4),
-        .x = -3,
-        .y = Canvas::Height / 2 - 2
-    };
+    falling.type = (TetType)((Random::get_uint() % 7)+1),
+    falling.rotation = (uint8_t)(Random::get_uint() % 4),
+    falling.x = -3,
+    falling.y = Canvas::Height / 2 - 2;
     render();
 }
 

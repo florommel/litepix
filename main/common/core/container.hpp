@@ -126,12 +126,14 @@ class Array<bool, Size> {
         constexpr Reference(uint8_t* byte, IntT n)
             : byte(byte), n(n) {}
         
-        void operator=(const bool x) {
+        Reference* operator=(const bool x) {
             *byte ^= (-x ^ (*byte)) & (1 << n);
+            return this;
         }
         
-        void operator=(const Reference& x) {
+        Reference* operator=(const Reference& x) {
             *this = (bool)(((*x.byte) >> x.n) & 1);
+            return this;
         }
         
         operator bool() {
@@ -148,7 +150,7 @@ class Array<bool, Size> {
      * @return  bit value at index
      */
     template<typename IntT>
-    constexpr const bool operator[](const IntT index) const {
+    constexpr bool operator[](const IntT index) const {
         return buffer[index >> 3] & (1 << (index & 0x07));
     }
     
