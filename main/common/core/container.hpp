@@ -126,14 +126,14 @@ class Array<bool, Size> {
         constexpr Reference(uint8_t* byte, IntT n)
             : byte(byte), n(n) {}
         
-        Reference* operator=(const bool x) {
+        Reference& operator=(const bool x) {
             *byte ^= (-x ^ (*byte)) & (1 << n);
-            return this;
+            return *this;
         }
         
-        Reference* operator=(const Reference& x) {
+        Reference& operator=(const Reference& x) {
             *this = (bool)(((*x.byte) >> x.n) & 1);
-            return this;
+            return *this;
         }
         
         operator bool() {
