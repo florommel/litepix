@@ -9,7 +9,7 @@ AVRDUDE_FLAGS=-c usbasp
 
 CC = avr-g++
 CFLAGS = -c -std=c++11 -mmcu=$(MCU) -D F_CPU=$(DF_CPU) -D ARCH_AVR -Os \
-	     -fpack-struct -fshort-enums -Wall
+	     -fpack-struct -fshort-enums -Wall -Wextra
 LDFLAGS = -mmcu=$(MCU) -Wall
 
 

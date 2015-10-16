@@ -163,7 +163,7 @@ class Delegate<RetT(ArgT)> {
     }
     
     template <RetT (handler)(ArgT arg)>
-    static RetT static_handler_wrapper(void* obj_ptr, ArgT arg) {
+    static RetT static_handler_wrapper(void*, ArgT arg) {
         return handler(arg);
     }
 };
@@ -245,7 +245,7 @@ class Delegate<RetT()> {
     }
     
     template <RetT (handler)()>
-    static RetT static_handler_wrapper(void* obj_ptr) {
+    static RetT static_handler_wrapper(void*) {
         return handler();
     }
 };
