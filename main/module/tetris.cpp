@@ -70,7 +70,8 @@ Tetris::Tetris() {
     
     new_tetromino();
     
-    falling_timer = Timer(DELEGATE(this, fall), 1000);
+    falling_timer.set_delegate(DELEGATE(this, fall));
+    falling_timer.set_interval(1000);
     falling_timer.start();
 }
 

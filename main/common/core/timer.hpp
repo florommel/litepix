@@ -68,7 +68,13 @@ class Timer {
     /**
      * Stop the timer when it is destroyed (e.g. goes out of scope).
      */
-    ~Timer();
+    ~Timer() noexcept;
+    
+    /*
+     * Delete copy construtor and assignment operator.
+     */
+    Timer(Timer const&) = delete;
+    Timer& operator=(Timer const&) = delete;
     
     /**
      * Set timer interval.

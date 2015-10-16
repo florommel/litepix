@@ -60,7 +60,7 @@ Timer::Timer(Delegate<void()> delegate, int16_t interval)
       timestamp(Clock::short_time_ms() + interval) {}
 
 
-Timer::~Timer() {
+Timer::~Timer() noexcept {
     stop();
 }
 
