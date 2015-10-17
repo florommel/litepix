@@ -49,8 +49,8 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
     g_mutex_lock(&save_buffer_mutex);
     uint8_t *p = save_buffer;
     int i, j;
-    for (i = 0; i < Canvas::Height; i++) {
-        for (j = 0; j < Canvas::Width; j++) {
+    for (i = 0; i < Canvas::Height; ++i) {
+        for (j = 0; j < Canvas::Width; ++j) {
             uint8_t g = *p++;
             uint8_t r = *p++;
             uint8_t b = *p++;

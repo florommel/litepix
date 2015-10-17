@@ -34,13 +34,13 @@ static const uint8_t snake_speed = 150;
 
 static inline void inc(uint8_t& value, uint8_t max) {
     if (value >= max) value = 0;
-    else value++;
+    else ++value;
 }
 
 
 static inline void dec(uint8_t& value, uint8_t max) {
     if (value == 0) value = max;
-    else value--;
+    else --value;
 }
 
 
@@ -156,7 +156,7 @@ void Snake::input(Input i) {
 
 
 void Snake::render() {
-    for (uint16_t i = 0; i < Canvas::Pixels; i++) {
+    for (uint16_t i = 0; i < Canvas::Pixels; ++i) {
         switch (field[i]) {
             case Type::Empty:
                 canvas2.set_pixel(i, 0x000000);

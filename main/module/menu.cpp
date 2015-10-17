@@ -131,8 +131,8 @@ void Menu::paint_icon(uint8_t index, bool highlight) {
     uint8_t x, y;
     calc_pos(x, y, index - offset);
     
-    for (uint8_t j = 0; j < IconHeight; j++) {
-        for (uint8_t i = 0; i < IconWidth; i++) {
+    for (uint8_t j = 0; j < IconHeight; ++j) {
+        for (uint8_t i = 0; i < IconWidth; ++i) {
             Color pixel = Progmem::read(progmem_icon, j * IconWidth + i);
             if (highlight && (pixel.red || pixel.green || pixel.blue)) {
                 rel_inc(pixel.red);
@@ -149,7 +149,7 @@ void Menu::paint_page(bool highlight) {
     canvas1.fill(0x000000);
     uint8_t page = curr_index / PageIconNum;
     uint8_t offset = page * PageIconNum;
-    for (uint8_t i = offset; i < offset + PageIconNum; i++) {
+    for (uint8_t i = offset; i < offset + PageIconNum; ++i) {
         if (i >= size_of_array(modules)) break;
         paint_icon(i, highlight && curr_index == i);
     }
@@ -159,11 +159,11 @@ void Menu::paint_page(bool highlight) {
 void Menu::input(Input i) {
     switch (i.data) {
         case Input::Left:
-            if (curr_index > 0) curr_index--;
+            if (curr_index > 0) --curr_index;
             break;
         case Input::Right:
             if (curr_index < size_of_array(modules) - 1)
-                curr_index++;
+                ++curr_index;
             break;
         case Input::Up:
             if (curr_index >= ColNum)

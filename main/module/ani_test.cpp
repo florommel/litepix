@@ -42,14 +42,14 @@ void AniTest::spot() {
 void AniTest::spot2() {
     if (int_matrix1[pos] == 0) up_mask0.bit_set(pos);
     if (pos >= Canvas::Pixels - 1) pos = 0;
-    else pos++;
+    else ++pos;
 }
 
 
 void AniTest::step() {
     spot();
     
-    for (uint8_t i = 0; i < Canvas::Pixels; i++) {
+    for (uint8_t i = 0; i < Canvas::Pixels; ++i) {
         if (int_matrix1[i] <= DecValue1) int_matrix1[i] = 0;
         else int_matrix1[i] -= DecValue1;
         
@@ -68,13 +68,13 @@ void AniTest::step() {
     
     canvas.render();
     
-    hue++;
+    ++hue;
 }
 
 
 void AniTest::input(Input in) {
     if (in.data == Input::Ok) {
-        for (uint8_t i = 0; i < 24; i++) {
+        for (uint8_t i = 0; i < 24; ++i) {
             uint8_t n = Random::get_uint() % 240;
             int_matrix1[n] = 255;
             int_matrix0[n] = 0;

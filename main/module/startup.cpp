@@ -51,7 +51,7 @@ void Module::StartUp::animation() {
     canvas1.fill_rect(Wh + 1, Hh + 1, lsize, lsize, lcolor);
     canvas1.render();
     
-    lsize--;
+    --lsize;
     lval += 12;
     
     if (lsize == 0) timer.set_delegate(DELEGATE(this, transition0));

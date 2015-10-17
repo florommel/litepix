@@ -73,7 +73,7 @@ namespace {
         const uint8_t valid_ps = (1 << StartS) | (1 << SigS);
         ps = ps & 0x1;
         
-        if (st <= SigS) st++;
+        if (st <= SigS) ++st;
         else if (st <= Sig1) st = SigS;
         else st = StartS;
         
@@ -84,7 +84,7 @@ namespace {
             {
                 return st;
             }
-            if (st == Sig0) st++;
+            if (st == Sig0) ++st;
             else if (st != StartS) st = StartS;
             else break;
         }
@@ -114,7 +114,7 @@ ISR(PCINT_vect) {
         sig[0] = sig[1] = sig[2] = sig[3] = 0;
     }
     else if (st == SigS) {
-        sigc++;
+        ++sigc;
         if (sigc == 32) decode(sig);
     }
     else if (st == Sig1) {

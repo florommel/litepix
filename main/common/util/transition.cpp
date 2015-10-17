@@ -36,7 +36,7 @@ static inline int16_t abs(int16_t x) {
 
 static void shuffle(uint8_t* arr, uint8_t size, uint16_t seed) {
     Random::seed(seed);
-    for (uint8_t i = 0; i < size - 1; i++) {
+    for (uint8_t i = 0; i < size - 1; ++i) {
         uint8_t j = Random::get_uint() % size;
         uint8_t t = arr[j];
         arr[j] = arr[i];
@@ -47,8 +47,8 @@ static void shuffle(uint8_t* arr, uint8_t size, uint16_t seed) {
 
 static uint8_t ones(Mask* mask) {
     uint8_t count = 0;
-    for (uint8_t i = 0; i < Canvas::Pixels; i++) {
-        if ((*mask)[i]) count++;
+    for (uint8_t i = 0; i < Canvas::Pixels; ++i) {
+        if ((*mask)[i]) ++count;
     }
     return count;
 }
@@ -100,7 +100,7 @@ void Transition::set_common_parameters(uint16_t duration,
 
 
 void Transition::finish_step() {
-    step++;
+    ++step;
     dest->render();
     if (step >= step_count) {
         timer.stop();
@@ -116,10 +116,10 @@ void Transition::fade_step() {
         uint8_t x = step_count - step;
         if (x == 0) x = 1;
         
-        for (uint8_t i = 0; i < Canvas::Pixels; i++) {
+        for (uint8_t i = 0; i < Canvas::Pixels; ++i) {
             if ((mask == nullptr) || ((*mask)[i])) {
                 if (is_color) p_src = src.color_buffer;
-                for (uint8_t n = 3; n > 0; n--) {
+                for (uint8_t n = 3; n > 0; --n) {
                     int16_t diff = *p_src - *p_dest;
                     if (diff != 0) {
                         if (x <= abs(diff)) {
@@ -128,8 +128,8 @@ void Transition::fade_step() {
                             *p_dest += (diff < 0) ? -1 : 1;
                         }
                     }
-                    p_dest++;
-                    p_src++;
+                    ++p_dest;
+                    ++p_src;
                 }
             }
             else {
@@ -177,16 +177,16 @@ void Transition::roll_step() {
             ib = column * col_dist;
         }
         
-        for (uint8_t i = 0; i < row_size; i++) {
+        for (uint8_t i = 0; i < row_size; ++i) {
             if ((mask == nullptr) || ((*mask)[ib])) {
                 uint8_t *p1 = &(dest->get_buffer()[ib * 3]);
                 uint8_t *p2;
                 if (is_color) p2 = src.color_buffer;
                 else p2 = &(src.canvas->get_buffer()[ib * 3]);
                 *p1 += (*p2 - *p1) / x;
-                p1++; p2++;
+                ++p1; ++p2;
                 *p1 += (*p2 - *p1) / x;
-                p1++; p2++;
+                ++p1; ++p2;
                 *p1 += (*p2 - *p1) / x;
             }
             ib += dist;
@@ -200,7 +200,7 @@ void Transition::dissolve_step() {
     {
         uint8_t count = (mask == nullptr) ? Canvas::Pixels : ones(mask);
         uint8_t order[count];
-        for (uint8_t i = 0, j = 0; i < Canvas::Pixels; i++) {
+        for (uint8_t i = 0, j = 0; i < Canvas::Pixels; ++i) {
             if ((mask == nullptr) || ((*mask)[i])) order[j++] = i;
         }
         shuffle(order, count, ext.seed | (step_count << 8));
@@ -214,13 +214,13 @@ void Transition::dissolve_step() {
             d = (count - d_sum) / (step_count - step) + 1;
         }
         
-        for (; d > 0; d--) {
+        for (; d > 0; --d) {
             if (d_sum >= count) break;
             uint16_t x = order[d_sum];
             if (is_color) dest->set_pixel(x, Color(src.color_buffer[1],
                                     src.color_buffer[0], src.color_buffer[2]));
             else dest->set_pixel(x, src.canvas->get_pixel(x));
-            d_sum++;
+            ++d_sum;
         }
     }
     finish_step();

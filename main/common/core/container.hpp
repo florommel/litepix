@@ -203,7 +203,7 @@ class Array<bool, Size> {
     void assign(const IntT value) {
         uint8_t c = (sizeof(IntT) > buffer_size(Size))
                     ? buffer_size(Size) : sizeof(IntT);
-        for (uint8_t i = 0; i < c; i++) {
+        for (uint8_t i = 0; i < c; ++i) {
             this->buffer[i] = (value >> (i*8)) & 0xFF;
         }
     }

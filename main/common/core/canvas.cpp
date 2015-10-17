@@ -60,7 +60,7 @@ Canvas::Canvas() : buffer{} {}
 
 void Canvas::fill(const Color color) {
     uint8_t* p = buffer;
-    for (uint8_t i = 0; i < Pixels; i++) {
+    for (uint8_t i = 0; i < Pixels; ++i) {
         *p++ = color.green;
         *p++ = color.red;
         *p++ = color.blue;
@@ -70,7 +70,7 @@ void Canvas::fill(const Color color) {
 
 void Canvas::fill_random() {
     Random::seed(Clock::short_time_ms());
-    for (uint8_t i = 0; i < Pixels; i++) {
+    for (uint8_t i = 0; i < Pixels; ++i) {
         uint8_t r = Random::get_uint() & 0xff;
         set_pixel(i, Color::fromHSV(r, 0xc0, 0xff));
     }

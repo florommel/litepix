@@ -80,7 +80,7 @@ void Tetris::game_over() {
     falling_timer.stop();
     is_game_over = true;
     
-    for (uint16_t i = 0; i < Canvas::Pixels; i++) mask.bit_set(i);
+    for (uint16_t i = 0; i < Canvas::Pixels; ++i) mask.bit_set(i);
     transition.set_source(Color(0, 0, 0));
     transition.roll(Direction::LeftRight, 3000);
 }
@@ -88,10 +88,10 @@ void Tetris::game_over() {
 
 bool Tetris::detect_collision() {
     Bitmap<4,4> bricks = get_bricks(falling.type, falling.rotation);
-    for (int8_t bricks_x = 0; bricks_x < 4; bricks_x++) {
+    for (int8_t bricks_x = 0; bricks_x < 4; ++bricks_x) {
         int8_t xpos = falling.x + bricks_x;
         
-        for (int8_t bricks_y = 0; bricks_y < 4; bricks_y++) {
+        for (int8_t bricks_y = 0; bricks_y < 4; ++bricks_y) {
             int8_t ypos = falling.y + bricks_y;
             
             if (bricks.get(bricks_x, bricks_y)) {
@@ -114,9 +114,9 @@ void Tetris::detect_rows_to_remove() {
     rows_to_remove = BitArray<Canvas::Width>();  // empty rows_to_remove
     
     // iterate through all rows and check if they are complete (full of bricks)
-    for (uint8_t x = 0; x < Canvas::Width; x++) {
+    for (uint8_t x = 0; x < Canvas::Width; ++x) {
         uint8_t is_complete = true;
-        for (uint8_t y = 0; y < Canvas::Height; y++) {
+        for (uint8_t y = 0; y < Canvas::Height; ++y) {
             if (field.get(x, y) == TetType::None) {
                 is_complete = false;
                 break;
@@ -138,8 +138,8 @@ void Tetris::remove_rows_start() {
     falling_timer.stop();
     
     // set transition mask according to rows_to_remove
-    for (uint8_t x = 0; x < Canvas::Width; x++) {
-        for (uint8_t y = 0; y < Canvas::Height; y++) {
+    for (uint8_t x = 0; x < Canvas::Width; ++x) {
+        for (uint8_t y = 0; y < Canvas::Height; ++y) {
             mask.set(x, y, rows_to_remove[x]);
         }
     }
@@ -160,14 +160,14 @@ void Tetris::remove_rows_start2() {
 
 void Tetris::remove_rows_finish() {
     // let bricks fall
-    for (uint8_t i = 0; i < Canvas::Width; i++) {
+    for (uint8_t i = 0; i < Canvas::Width; ++i) {
         if (rows_to_remove[i]) {
-            for (int8_t x = i-1; x >= 0; x--) {
-                for (uint8_t y = 0; y < Canvas::Height; y++) {
+            for (int8_t x = i-1; x >= 0; --x) {
+                for (uint8_t y = 0; y < Canvas::Height; ++y) {
                     field.set(x+1, y, field.get(x, y));
                 }
             }
-            for (uint8_t y = 0; y < Canvas::Height; y++) {
+            for (uint8_t y = 0; y < Canvas::Height; ++y) {
                 field.set(0, y, TetType::None);
             }
         }
@@ -189,18 +189,18 @@ void Tetris::new_tetromino() {
 
 void Tetris::fall() {
     // fall in x direction (left to right - because led matrix is flipped)
-    falling.x++;
+    ++falling.x;
     
     if (detect_collision()) {
         // restore previous position
-        falling.x--;
+        --falling.x;
         
         // add falling tetromino to field (lying tetrominos)
         Bitmap<4,4> bricks = get_bricks(falling.type, falling.rotation);
-        for (int8_t bricks_x = 0; bricks_x < 4; bricks_x++) {
+        for (int8_t bricks_x = 0; bricks_x < 4; ++bricks_x) {
             int8_t xpos = falling.x + bricks_x;
             
-            for (int8_t bricks_y = 0; bricks_y < 4; bricks_y++) {
+            for (int8_t bricks_y = 0; bricks_y < 4; ++bricks_y) {
                 int8_t ypos = falling.y + bricks_y;
                 
                 if (bricks.get(bricks_x, bricks_y)) {
@@ -233,13 +233,13 @@ void Tetris::move(Move m) {
     
     switch (m) {
         case Move::Left:
-            falling.y++;
+            ++falling.y;
             break;
         case Move::Right:
-            falling.y--;
+            --falling.y;
             break;
         case Move::Down:
-            falling.x++;
+            ++falling.x;
             break;
         case Move::InstantDown:
             // TODO
@@ -281,7 +281,7 @@ void Tetris::input_handler(Input i) {
 
 void Tetris::render() {
     // paint lying bricks
-    for (uint8_t i = 0; i < Canvas::Pixels; i++) {
+    for (uint8_t i = 0; i < Canvas::Pixels; ++i) {
         canvas.set_pixel(i, get_color(field[i]));
     }
     
@@ -289,11 +289,11 @@ void Tetris::render() {
     Bitmap<4,4> bricks = get_bricks(falling.type, falling.rotation);
     Color color = get_color(falling.type);
     if (falling.type != TetType::None) {
-        for (int8_t bricks_x = 0; bricks_x < 4; bricks_x++) {
+        for (int8_t bricks_x = 0; bricks_x < 4; ++bricks_x) {
             int8_t xpos = falling.x + bricks_x;
             
             if (xpos >= 0) {
-                for (int8_t bricks_y = 0; bricks_y < 4; bricks_y++) {
+                for (int8_t bricks_y = 0; bricks_y < 4; ++bricks_y) {
                     int8_t ypos = falling.y + bricks_y;
                     if (bricks.get(bricks_x, bricks_y)) 
                         canvas.set_pixel(xpos, ypos, color);
