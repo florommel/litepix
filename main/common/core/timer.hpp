@@ -71,10 +71,12 @@ class Timer final {
     ~Timer() noexcept;
     
     /*
-     * Delete copy construtor and assignment operator.
+     * Delete copy/move construtor and copy/move assignment operator.
      */
     Timer(Timer const&) = delete;
+    Timer(Timer&&) = delete;
     Timer& operator=(Timer const&) = delete;
+    Timer& operator=(Timer&& other) = delete;
     
     /**
      * Set timer interval.
