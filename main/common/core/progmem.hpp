@@ -55,7 +55,7 @@ namespace Progmem {
      * @param   address   a pointer to the object
      */
     template<typename T>
-    inline T read(const T* address);
+    inline T read(T const* address);
     
     /**
      * Get an object of type T from program memory at the specified address
@@ -65,7 +65,7 @@ namespace Progmem {
      * @param   offset    offset in sizeof(T) = index
      */
     template<typename T>
-    inline T read(const T* address, size_t offset);
+    inline T read(T const* address, size_t offset);
 }
 
 

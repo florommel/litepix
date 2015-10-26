@@ -175,7 +175,7 @@ void Snake::render() {
     uint8_t x = tail_x;
     uint8_t y = tail_y;
     while (true) {
-        canvas2.set_pixel(x, y, Color::fromHSV(hue, 0xee, 0xff));
+        canvas2.set_pixel(x, y, Color::from_hsv(hue, 0xee, 0xff));
         if (hue <= hue_min) hue_inc = 2;
         else if (hue >= hue_max) hue_inc = -2;
         hue += hue_inc;

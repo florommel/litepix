@@ -61,9 +61,9 @@ void AniTest::step() {
             else int_matrix0[i] -= DecValue0;
         }
         if (int_matrix1[i] == 0)
-            canvas.set_pixel(i, Color::fromHSV(hue, 255, int_matrix0[i]));
+            canvas.set_pixel(i, Color::from_hsv(hue, 255, int_matrix0[i]));
         else
-            canvas.set_pixel(i, Color::fromHSV(hue + 18, 255, int_matrix1[i]));
+            canvas.set_pixel(i, Color::from_hsv(hue + 18, 255, int_matrix1[i]));
     }
     
     canvas.render();

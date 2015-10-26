@@ -69,7 +69,7 @@ struct Color {
      * @param   s   saturation
      * @param   v   value
      */
-    static Color fromHSV(uint8_t h, uint8_t s, uint8_t v);
+    static Color from_hsv(uint8_t h, uint8_t s, uint8_t v);
 };
 
 
@@ -107,7 +107,7 @@ class Canvas {
      * Fill canvas with given color.
      * @param   color   color which is used to fill canvas
      */
-    void fill(const Color color);
+    void fill(Color color);
     
     /**
      * Fill canvas with randomly colored pixels.
@@ -140,14 +140,14 @@ class Canvas {
      * @param   y   y-position
      * @return  the pixel's color
      */
-    Color get_pixel(const uint8_t x, const uint8_t y) const;
+    Color get_pixel(uint8_t x, uint8_t y) const;
     
     /**
      * Set pixel at specified index.
      * @param   index   pixel index (= y-pos * width + x-pos)
      * @param   color   color to set
      */
-    void set_pixel(uint16_t index, const Color color);
+    void set_pixel(uint16_t index, Color color);
     
     /**
      * Get pixel at specified position
@@ -155,7 +155,7 @@ class Canvas {
      * @param   y       y-position
      * @param   color   color to set
      */
-    void set_pixel(const uint8_t x, const uint8_t y, const Color color);
+    void set_pixel(uint8_t x, uint8_t y, Color color);
     
     /**
      * Get the canvas' underlying buffer.

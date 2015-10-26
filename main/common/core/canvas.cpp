@@ -24,7 +24,7 @@
 #include "random.hpp"
 
 
-Color Color::fromHSV(uint8_t h, uint8_t s, uint8_t v) {
+Color Color::from_hsv(uint8_t h, uint8_t s, uint8_t v) {
     if (s == 0) return Color(v, v, v);
     
     uint8_t hi, f;
@@ -58,7 +58,7 @@ Color Color::fromHSV(uint8_t h, uint8_t s, uint8_t v) {
 Canvas::Canvas() : buffer{} {}
 
 
-void Canvas::fill(const Color color) {
+void Canvas::fill(Color color) {
     uint8_t* p = buffer;
     for (uint8_t i = 0; i < Pixels; ++i) {
         *p++ = color.green;
@@ -72,7 +72,7 @@ void Canvas::fill_random() {
     Random::seed(Clock::short_time_ms());
     for (uint8_t i = 0; i < Pixels; ++i) {
         uint8_t r = Random::get_uint() & 0xff;
-        set_pixel(i, Color::fromHSV(r, 0xc0, 0xff));
+        set_pixel(i, Color::from_hsv(r, 0xc0, 0xff));
     }
 }
 
@@ -97,12 +97,12 @@ Color Canvas::get_pixel(uint16_t index) const {
 }
 
 
-Color Canvas::get_pixel(const uint8_t x, const uint8_t y) const {
+Color Canvas::get_pixel(uint8_t x, uint8_t y) const {
     return get_pixel(y*Width + x);
 }
 
 
-void Canvas::set_pixel(uint16_t index, const Color color) {
+void Canvas::set_pixel(uint16_t index, Color color) {
     index *= 3;
     buffer[index++] = color.green;
     buffer[index++] = color.red;
@@ -110,6 +110,6 @@ void Canvas::set_pixel(uint16_t index, const Color color) {
 }
 
 
-void Canvas::set_pixel(const uint8_t x, const uint8_t y, const Color color) {
+void Canvas::set_pixel(uint8_t x, uint8_t y, Color color) {
     set_pixel(y*Width + x, color);
 }

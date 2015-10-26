@@ -64,7 +64,7 @@ class Matrix : public Array<T, Width*Height> {
      * @param   y   y-position
      * @return  element at position (x, y)
      */
-    constexpr T get(const uint8_t x, const uint8_t y) const {
+    constexpr T get(uint8_t x, uint8_t y) const {
         return (*this)[(uint16_t)y*Width + x];
     }
     
@@ -74,7 +74,7 @@ class Matrix : public Array<T, Width*Height> {
      * @param   y       y-position
      * @param   value   element to set
      */
-    void set(const uint8_t x, const uint8_t y, const T value) {
+    void set(uint8_t x, uint8_t y, T value) {
         (*this)[(uint16_t)y*Width + x] = value;
     }
 };
@@ -90,7 +90,7 @@ class Array {
      * @return  element (copy) at index
      */
     template<typename IntT>
-    constexpr const T operator[](const IntT index) const {
+    constexpr T operator[](IntT index) const {
         return buffer[index];
     }
     
@@ -100,7 +100,7 @@ class Array {
      * @return  element reference at index
      */
     template<typename IntT>
-    T& operator[](const IntT index) {
+    T& operator[](IntT index) {
         return buffer[index];
     }
     
@@ -121,22 +121,31 @@ class Array<bool, Size> {
      * Type to reference a bit value.
      */
     template<typename IntT>
-    class Reference {
+    class Reference final {
       public:
         constexpr Reference(uint8_t* byte, IntT n)
             : byte(byte), n(n) {}
         
-        Reference& operator=(const bool x) {
+        Reference(Reference const& x) = default;
+        
+        Reference(Reference&& x) = default;
+        
+        Reference& operator=(bool x) {
             *byte ^= (-x ^ (*byte)) & (1 << n);
             return *this;
         }
         
-        Reference& operator=(const Reference& x) {
+        Reference& operator=(Reference const& x) {
             *this = (bool)(((*x.byte) >> x.n) & 1);
             return *this;
         }
         
-        operator bool() {
+        Reference& operator=(Reference&& x) noexcept {
+            *this = (bool)(((*x.byte) >> x.n) & 1);
+            return *this;
+        }
+        
+        operator bool() const {
             return ((*byte) >> n) & 1;
         }
       private:
@@ -150,7 +159,7 @@ class Array<bool, Size> {
      * @return  bit value at index
      */
     template<typename IntT>
-    constexpr bool operator[](const IntT index) const {
+    constexpr bool operator[](IntT index) const {
         return buffer[index >> 3] & (1 << (index & 0x07));
     }
     
@@ -160,7 +169,7 @@ class Array<bool, Size> {
      * @return  bit reference at index
      */
     template<typename IntT>
-    Reference<IntT> operator[](const IntT index) {
+    Reference<IntT> operator[](IntT index) {
         return Reference<IntT>(&(buffer[index >> 3]), index & 0x07);
     }
     
@@ -170,7 +179,7 @@ class Array<bool, Size> {
      * @param   index   bit index
      */
     template<typename IntT>
-    void bit_set(const IntT index) {
+    void bit_set(IntT index) {
         buffer[index >> 3] |= (1 << (index & 0x07));
     }
     
@@ -180,7 +189,7 @@ class Array<bool, Size> {
      * @param   index   bit index
      */
     template<typename IntT>
-    void bit_reset(const IntT index) {
+    void bit_reset(IntT index) {
         buffer[index >> 3] &= ~(1 << (index & 0x07));
     }
     
@@ -190,7 +199,7 @@ class Array<bool, Size> {
      * @param   index   bit index
      */
     template<typename IntT>
-    void bit_toggle(const IntT index) {
+    void bit_toggle(IntT index) {
         buffer[index >> 3] ^= (1 << (index & 0x07));
     }
     
@@ -200,7 +209,7 @@ class Array<bool, Size> {
      * @param   value   integer value
      */
     template<typename IntT>
-    void assign(const IntT value) {
+    void assign(IntT value) {
         uint8_t c = (sizeof(IntT) > buffer_size(Size))
                     ? buffer_size(Size) : sizeof(IntT);
         for (uint8_t i = 0; i < c; ++i) {
@@ -210,7 +219,7 @@ class Array<bool, Size> {
     
   private:
     template<typename IntT>
-    static constexpr IntT buffer_size(const IntT size) {
+    static constexpr IntT buffer_size(IntT size) {
         return ((size & 0x07) == 0) ? (size >> 3) : ((size >> 3) + 1);
     }
     

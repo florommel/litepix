@@ -49,14 +49,14 @@ class Timer final {
      * Initialize timer with given interval and empty delegate.
      * @param   interval   timer interval in milliseconds
      */
-    Timer(int16_t interval);
+    explicit Timer(int16_t interval);
     
     /**
      * Initialize timer with given delegate and
      * default interval (1000 milliseconds).
      * @param   delegate   timer delegate
      */
-    Timer(Delegate<void()> delegate);
+    explicit Timer(Delegate<void()> delegate);
     
     /**
      * Initialize timer with given delegate and interval.

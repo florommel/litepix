@@ -23,13 +23,13 @@
 
 
 template<typename T>
-static inline T Progmem::read(const T* address) {
+static inline T Progmem::read(T const* address) {
     return *address;
 }
 
 
 template<typename T>
-static inline T Progmem::read(const T* address, size_t offset) {
+static inline T Progmem::read(T const* address, size_t offset) {
     return *(address + offset);
 }
 

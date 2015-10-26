@@ -29,16 +29,16 @@
 namespace Progmem {
     
     template<>
-    inline uint8_t read<uint8_t>(const uint8_t* address);
+    inline uint8_t read<uint8_t>(uint8_t const* address);
 
 }
 
 
 
 template<typename T>
-static inline T Progmem::read(const T* address) {
+static inline T Progmem::read(T const* address) {
     uint8_t data[sizeof(T)];
-    const uint8_t* pgm_ptr = reinterpret_cast<const uint8_t*>(address);
+    uint8_t const* pgm_ptr = reinterpret_cast<uint8_t const*>(address);
     for (size_t i = 0; i < sizeof(T); i++) {
         data[i] = read(pgm_ptr++);
     }
@@ -48,7 +48,7 @@ static inline T Progmem::read(const T* address) {
 
 
 template<>
-inline uint8_t Progmem::read<uint8_t>(const uint8_t* address) {
+inline uint8_t Progmem::read<uint8_t>(uint8_t const* address) {
     register uint8_t result;
     asm volatile (
         "lpm" "\n\t"
@@ -62,7 +62,7 @@ inline uint8_t Progmem::read<uint8_t>(const uint8_t* address) {
 
 
 template<typename T>
-static inline T Progmem::read(const T* address, size_t offset) {
+static inline T Progmem::read(T const* address, size_t offset) {
     return read<T>(address + offset);
 }
 

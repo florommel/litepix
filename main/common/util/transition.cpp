@@ -54,8 +54,7 @@ static uint8_t ones(Mask* mask) {
 }
 
 
-void Transition::fade(uint16_t duration,
-                         Delegate<void()> finished_action) {
+void Transition::fade(uint16_t duration, Delegate<void()> finished_action) {
     if (dest == nullptr) return;
     set_common_parameters(duration, finished_action);
     timer.set_delegate(DELEGATE(this, fade_step));
@@ -64,7 +63,7 @@ void Transition::fade(uint16_t duration,
 
 
 void Transition::roll(Direction direction, uint16_t duration,
-                         Delegate<void()> finished_action) {
+                      Delegate<void()> finished_action) {
     if (dest == nullptr) return;
     set_common_parameters(duration, finished_action);
     timer.set_delegate(DELEGATE(this, roll_step));
@@ -73,8 +72,7 @@ void Transition::roll(Direction direction, uint16_t duration,
 }
 
 
-void Transition::dissolve(uint16_t duration,
-                             Delegate<void()> finished_action) {
+void Transition::dissolve(uint16_t duration, Delegate<void()> finished_action) {
     if (dest == nullptr) return;
     set_common_parameters(duration, finished_action);
     timer.set_delegate(DELEGATE(this, dissolve_step));
@@ -85,7 +83,7 @@ void Transition::dissolve(uint16_t duration,
 
 
 void Transition::set_common_parameters(uint16_t duration,
-                                          Delegate<void()> finished_action) {
+                                       Delegate<void()> finished_action) {
     this->finished_action = finished_action;
     
     if (duration >= DefaultSample * ByteSize) {
