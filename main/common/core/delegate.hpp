@@ -36,9 +36,9 @@
  * @return  a delegate object encapsulatng the method and the object pointer.
  */
 #define DELEGATE_SIG(signature, obj_ptr, method)\
-    Delegate<signature>\
-    ::bind<_internal::rm_ptr<decltype(obj_ptr)>::type,\
-    &_internal::rm_ptr<decltype(obj_ptr)>::type::method>(obj_ptr)
+    ::Delegate<signature>\
+    ::bind<::_internal::rm_ptr<decltype(obj_ptr)>::type,\
+    &::_internal::rm_ptr<decltype(obj_ptr)>::type::method>(obj_ptr)
 
 /**
  * Create a new Delegate from method.
@@ -50,8 +50,8 @@
  * @return  a delegate object encapsulatng the method and the object pointer.
  */
 #define DELEGATE(obj_ptr, method)\
-    DELEGATE_SIG(decltype(_internal::delegate_type_helper(\
-        &_internal::rm_ptr<decltype(obj_ptr)>::type::method))::signature,\
+    DELEGATE_SIG(decltype(::_internal::delegate_type_helper(\
+        &::_internal::rm_ptr<decltype(obj_ptr)>::type::method))::signature,\
     obj_ptr, method)
 
 /**
@@ -61,7 +61,7 @@
  * @return  a delegate object encapsulatng the function pointer.
  */
 #define DELEGATE_STATIC_SIG(signature, function)\
-    Delegate<signature>::bind_static<function>()
+    ::Delegate<signature>::bind_static<function>()
 
 /**
  * Create a new Delegate from static method or function.
@@ -71,7 +71,7 @@
  * @return  a delegate object encapsulatng the function pointer.
  */
 #define DELEGATE_STATIC(function)\
-    DELEGATE_STATIC_SIG(decltype(_internal::delegate_static_type_helper(\
+    DELEGATE_STATIC_SIG(decltype(::_internal::delegate_static_type_helper(\
         function))::signature, function)
 
 
