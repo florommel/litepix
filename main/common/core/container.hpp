@@ -54,47 +54,9 @@ template<uint8_t Width, uint8_t Height>
 using Bitmap = Matrix<bool, Width, Height>;
 
 
-/**
- * Type to reference a bit value.
- */
-class BitReference;
-
-
 
 /* --- I M P L E M E N T A T I O N --- */
 
-
-class BitReference final {
-  public:
-    constexpr BitReference(uint8_t* byte, uint8_t n)
-        : byte(byte), n(n) {}
-    
-    BitReference(BitReference const& x) = default;
-    
-    BitReference(BitReference&& x) = default;
-    
-    BitReference& operator=(bool x) {
-        *byte ^= (-x ^ (*byte)) & (1 << n);
-        return *this;
-    }
-    
-    BitReference& operator=(BitReference const& x) {
-        *this = (bool)(((*x.byte) >> x.n) & 1);
-        return *this;
-    }
-    
-    BitReference& operator=(BitReference&& x) noexcept {
-        *this = (bool)(((*x.byte) >> x.n) & 1);
-        return *this;
-    }
-    
-    operator bool() const {
-        return ((*byte) >> n) & 1;
-    }
-  private:
-    uint8_t* byte;
-    uint8_t n;
-};
 
 
 template<typename T, uint8_t Width, uint8_t Height>
@@ -144,7 +106,7 @@ class Matrix<bool, Width, Height>
      * @param   y   y-position
      * @return  bit reference at position (x, y)
      */
-    BitReference operator()(uint8_t x, uint8_t y) {
+    typename BitArray<Width*Height>::BitRef operator()(uint8_t x, uint8_t y) {
         return (*this)[(uint16_t)y*Width + x];
     }
 
@@ -189,6 +151,46 @@ class Array<bool, Size> {
   public:
     
     /**
+     * A Type to reference a bit value.
+     * An object of this type may be returned by BitArray objects.
+     * This class cannot be instantiated directly (except by copy and move
+     * construction).
+     */
+    class BitRef final {
+      public:
+        
+        BitRef(BitRef const& x) = default;
+        
+        BitRef(BitRef&& x) = default;
+        
+        BitRef& operator=(bool x) {
+            *byte ^= (-x ^ (*byte)) & (1 << n);
+            return *this;
+        }
+        
+        BitRef& operator=(BitRef const& x) {
+            *this = (bool)(((*x.byte) >> x.n) & 1);
+            return *this;
+        }
+        
+        BitRef& operator=(BitRef&& x) noexcept {
+            *this = (bool)(((*x.byte) >> x.n) & 1);
+            return *this;
+        }
+        
+        operator bool() const {
+            return ((*byte) >> n) & 1;
+        }
+        
+      private:
+        uint8_t* byte;
+        uint8_t n;
+        
+        friend class Array<bool, Size>;
+        constexpr BitRef(uint8_t* byte, uint8_t n) : byte(byte), n(n) {}
+    };
+    
+    /**
      * Get bit value at index.
      * @param   index   bit index
      * @return  bit value at index
@@ -204,8 +206,8 @@ class Array<bool, Size> {
      * @return  bit reference at index
      */
     template<typename IntT>
-    BitReference operator[](IntT index) {
-        return BitReference(&(buffer[index >> 3]), index & 0x07);
+    BitRef operator[](IntT index) {
+        return BitRef(&(buffer[index >> 3]), index & 0x07);
     }
     
     /**
