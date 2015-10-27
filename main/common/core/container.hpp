@@ -54,6 +54,49 @@ template<uint8_t Width, uint8_t Height>
 using Bitmap = Matrix<bool, Width, Height>;
 
 
+/**
+ * Type to reference a bit value.
+ */
+class BitReference;
+
+
+
+/* --- I M P L E M E N T A T I O N --- */
+
+
+class BitReference final {
+  public:
+    constexpr BitReference(uint8_t* byte, uint8_t n)
+        : byte(byte), n(n) {}
+    
+    BitReference(BitReference const& x) = default;
+    
+    BitReference(BitReference&& x) = default;
+    
+    BitReference& operator=(bool x) {
+        *byte ^= (-x ^ (*byte)) & (1 << n);
+        return *this;
+    }
+    
+    BitReference& operator=(BitReference const& x) {
+        *this = (bool)(((*x.byte) >> x.n) & 1);
+        return *this;
+    }
+    
+    BitReference& operator=(BitReference&& x) noexcept {
+        *this = (bool)(((*x.byte) >> x.n) & 1);
+        return *this;
+    }
+    
+    operator bool() const {
+        return ((*byte) >> n) & 1;
+    }
+  private:
+    uint8_t* byte;
+    uint8_t n;
+};
+
+
 template<typename T, uint8_t Width, uint8_t Height>
 class Matrix : public Array<T, Width*Height> {
   public:
@@ -64,19 +107,47 @@ class Matrix : public Array<T, Width*Height> {
      * @param   y   y-position
      * @return  element at position (x, y)
      */
-    constexpr T get(uint8_t x, uint8_t y) const {
+    constexpr T operator()(uint8_t x, uint8_t y) const {
         return (*this)[(uint16_t)y*Width + x];
     }
     
     /**
-     * Set element at specified position.
-     * @param   x       x-position
-     * @param   y       y-position
-     * @param   value   element to set
+     * Get element reference at specified position.
+     * @param   x   x-position
+     * @param   y   y-position
+     * @return  element reference at position (x, y)
      */
-    void set(uint8_t x, uint8_t y, T value) {
-        (*this)[(uint16_t)y*Width + x] = value;
+    T& operator()(uint8_t x, uint8_t y) {
+        return (*this)[(uint16_t)y*Width + x];
     }
+};
+
+
+template<uint8_t Width, uint8_t Height>
+class Matrix<bool, Width, Height>
+    : public BitArray<Width*Height> {
+  public:
+    
+    /**
+     * Get bit value at specified position.
+     * @param   x   x-position
+     * @param   y   y-position
+     * @return  bit value at position (x, y)
+     */
+    constexpr bool operator()(uint8_t x, uint8_t y) const {
+        return (*this)[(uint16_t)y*Width + x];
+    }
+    
+    /**
+     * Get bit reference at specified position.
+     * @param   x   x-position
+     * @param   y   y-position
+     * @return  bit reference at position (x, y)
+     */
+    BitReference operator()(uint8_t x, uint8_t y) {
+        return (*this)[(uint16_t)y*Width + x];
+    }
+
 };
 
 
@@ -118,42 +189,6 @@ class Array<bool, Size> {
   public:
     
     /**
-     * Type to reference a bit value.
-     */
-    template<typename IntT>
-    class Reference final {
-      public:
-        constexpr Reference(uint8_t* byte, IntT n)
-            : byte(byte), n(n) {}
-        
-        Reference(Reference const& x) = default;
-        
-        Reference(Reference&& x) = default;
-        
-        Reference& operator=(bool x) {
-            *byte ^= (-x ^ (*byte)) & (1 << n);
-            return *this;
-        }
-        
-        Reference& operator=(Reference const& x) {
-            *this = (bool)(((*x.byte) >> x.n) & 1);
-            return *this;
-        }
-        
-        Reference& operator=(Reference&& x) noexcept {
-            *this = (bool)(((*x.byte) >> x.n) & 1);
-            return *this;
-        }
-        
-        operator bool() const {
-            return ((*byte) >> n) & 1;
-        }
-      private:
-        uint8_t* byte;
-        IntT n;
-    };
-    
-    /**
      * Get bit value at index.
      * @param   index   bit index
      * @return  bit value at index
@@ -169,8 +204,8 @@ class Array<bool, Size> {
      * @return  bit reference at index
      */
     template<typename IntT>
-    Reference<IntT> operator[](IntT index) {
-        return Reference<IntT>(&(buffer[index >> 3]), index & 0x07);
+    BitReference operator[](IntT index) {
+        return BitReference(&(buffer[index >> 3]), index & 0x07);
     }
     
     /**

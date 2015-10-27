@@ -94,12 +94,12 @@ bool Tetris::detect_collision() {
         for (int8_t bricks_y = 0; bricks_y < 4; ++bricks_y) {
             int8_t ypos = falling.y + bricks_y;
             
-            if (bricks.get(bricks_x, bricks_y)) {
+            if (bricks(bricks_x, bricks_y)) {
                 if (xpos >= Canvas::Width)
                     return true;
                 if ((ypos < 0) || (ypos >= Canvas::Height))
                     return true;
-                if ((xpos > 0) && field.get(xpos, ypos) != TetType::None)
+                if ((xpos > 0) && field(xpos, ypos) != TetType::None)
                     return true;
             }
         }
@@ -117,7 +117,7 @@ void Tetris::detect_rows_to_remove() {
     for (uint8_t x = 0; x < Canvas::Width; ++x) {
         uint8_t is_complete = true;
         for (uint8_t y = 0; y < Canvas::Height; ++y) {
-            if (field.get(x, y) == TetType::None) {
+            if (field(x, y) == TetType::None) {
                 is_complete = false;
                 break;
             }
@@ -140,7 +140,7 @@ void Tetris::remove_rows_start() {
     // set transition mask according to rows_to_remove
     for (uint8_t x = 0; x < Canvas::Width; ++x) {
         for (uint8_t y = 0; y < Canvas::Height; ++y) {
-            mask.set(x, y, rows_to_remove[x]);
+            mask(x, y) = rows_to_remove[x];
         }
     }
     
@@ -164,11 +164,11 @@ void Tetris::remove_rows_finish() {
         if (rows_to_remove[i]) {
             for (int8_t x = i-1; x >= 0; --x) {
                 for (uint8_t y = 0; y < Canvas::Height; ++y) {
-                    field.set(x+1, y, field.get(x, y));
+                    field(x+1, y) = field(x, y);
                 }
             }
             for (uint8_t y = 0; y < Canvas::Height; ++y) {
-                field.set(0, y, TetType::None);
+                field(0, y) = TetType::None;
             }
         }
     }
@@ -203,12 +203,12 @@ void Tetris::fall() {
             for (int8_t bricks_y = 0; bricks_y < 4; ++bricks_y) {
                 int8_t ypos = falling.y + bricks_y;
                 
-                if (bricks.get(bricks_x, bricks_y)) {
+                if (bricks(bricks_x, bricks_y)) {
                     if (xpos < 0) {
                         game_over();
                         return;
                     }
-                    field.set(xpos, ypos, falling.type);
+                    field(xpos, ypos) = falling.type;
                 }
             }
         }
@@ -295,7 +295,7 @@ void Tetris::render() {
             if (xpos >= 0) {
                 for (int8_t bricks_y = 0; bricks_y < 4; ++bricks_y) {
                     int8_t ypos = falling.y + bricks_y;
-                    if (bricks.get(bricks_x, bricks_y)) 
+                    if (bricks(bricks_x, bricks_y)) 
                         canvas.set_pixel(xpos, ypos, color);
                 }
             }

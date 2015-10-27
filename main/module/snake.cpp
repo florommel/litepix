@@ -71,9 +71,9 @@ Snake::Snake()
     transition.set_source(canvas2);
     transition.fade(800, DELEGATE(this, move));
     
-    field.set(mx-1, my, Type::PartRight);
-    field.set(mx, my, Type::PartRight);
-    field.set(mx+1, my, Type::PartRight);
+    field(mx-1, my) = Type::PartRight;
+    field(mx, my) = Type::PartRight;
+    field(mx+1, my) = Type::PartRight;
     place_food();
     render();
 }
@@ -86,23 +86,23 @@ void Snake::game_over() {
 
 void Snake::move() {
     {
-        prev = field.get(head_x, head_y);
+        prev = field(head_x, head_y);
         follow_direction(head_x, head_y, prev);
         
-        Type t = field.get(head_x, head_y);
+        Type t = field(head_x, head_y);
         bool eat = (t == Type::Food);
         if (t != Type::Empty && t != Type::Food) {
             game_over();
             return;
         }
         
-        field.set(head_x, head_y, prev);
+        field(head_x, head_y) = prev;
         
         if (eat) {
             place_food();
         } else {
-            Type t = field.get(tail_x, tail_y);
-            field.set(tail_x, tail_y, Type::Empty);
+            Type t = field(tail_x, tail_y);
+            field(tail_x, tail_y) = Type::Empty;
             follow_direction(tail_x, tail_y, t);
         }
     }
@@ -124,7 +124,7 @@ void Snake::place_food() {
 
 
 void Snake::input(Input i) {
-    Type old_type = field.get(head_x, head_y);
+    Type old_type = field(head_x, head_y);
     Type new_type;
     
     switch (i.data) {
@@ -151,7 +151,7 @@ void Snake::input(Input i) {
     }
     
     if (old_type == new_type) return;
-    field.set(head_x, head_y, new_type);
+    field(head_x, head_y) = new_type;
 }
 
 
@@ -182,6 +182,6 @@ void Snake::render() {
         
         if (x == head_x && y == head_y) break;
         
-        follow_direction(x, y, field.get(x, y));
+        follow_direction(x, y, field(x, y));
     }
 }
