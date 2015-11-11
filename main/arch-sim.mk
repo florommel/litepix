@@ -6,7 +6,7 @@
 CC = g++
 CFLAGS = -ggdb -c -std=c++11 -Wall `pkg-config --cflags --libs gtk+-3.0` \
          -D ARCH_SIM $(IQUOTE)
-LDFLAGS = `pkg-config --cflags --libs gtk+-3.0` -Wall -Wextra $(IQUOTE)
+LDFLAGS = `pkg-config --cflags --libs gtk+-3.0` -Wall $(IQUOTE)
 
 
 ALLSUBDIRS = $(SUBDIRS) $(SUBDIRS_SIM)
