@@ -24,14 +24,6 @@
 #include "../input.hpp"
 
 
-#define S_DDR DDRB
-#define S_PORT PORTB
-#define S_SS PB2
-#define S_MOSI PB3
-#define S_MISO PB4
-#define S_SCK PB5
-
-
 static const uint8_t MasterSendRequest = 0x01;
 static const uint8_t MasterClearRequest = 0x02;
 
