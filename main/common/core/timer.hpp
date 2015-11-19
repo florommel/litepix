@@ -38,38 +38,38 @@
  */
 class Timer final {
   public:
-    
+
     /**
      * Initialize timer with empty delegate and
      * default interval (1000 milliseconds).
      */
     Timer();
-    
+
     /**
      * Initialize timer with given interval and empty delegate.
      * @param   interval   timer interval in milliseconds
      */
     explicit Timer(int16_t interval);
-    
+
     /**
      * Initialize timer with given delegate and
      * default interval (1000 milliseconds).
      * @param   delegate   timer delegate
      */
     explicit Timer(Delegate<void()> delegate);
-    
+
     /**
      * Initialize timer with given delegate and interval.
      * @param   delegate   timer delegate
      * @param   interval   timer interval in milliseconds
      */
     Timer(Delegate<void()> delegate, int16_t interval);
-    
+
     /**
      * Stop the timer when it is destroyed (e.g. goes out of scope).
      */
     ~Timer() noexcept;
-    
+
     /*
      * Delete copy/move construtor and copy/move assignment operator.
      */
@@ -77,7 +77,7 @@ class Timer final {
     Timer(Timer&&) = delete;
     Timer& operator=(Timer const&) = delete;
     Timer& operator=(Timer&& other) = delete;
-    
+
     /**
      * Set timer interval.
      * @param   interval   timer interval in milliseconds
@@ -85,7 +85,7 @@ class Timer final {
     void set_interval(uint16_t interval) {
         this->interval = interval;
     }
-    
+
     /**
      * Set timer delegate.
      * @param   delegate   timer delegate
@@ -93,7 +93,7 @@ class Timer final {
     void set_delegate(Delegate<void()> delegate) {
         this->delegate = delegate;
     }
-    
+
     /**
      * Get timer delegate.
      * @return   timer delegate
@@ -101,7 +101,7 @@ class Timer final {
     Delegate<void()> get_delegate() const {
         return delegate;
     }
-    
+
     /**
      * Get timer interval.
      * @return   timer interval in milliseconds
@@ -109,25 +109,25 @@ class Timer final {
     uint16_t get_interval() const {
         return interval;
     }
-    
+
     /**
      * Determine if the timer is currently running.
      * @return   true when the timer is running, otherwise false
      */
     bool is_running() const;
-    
+
     /**
      * Start the timer. The timer delegate will be executed periodically
      * (requires a running main loop Mainloop::run()).
      * The timer delegate must be set for this method to be effective.
      */
     void start();
-    
+
     /**
      * Stop the timer.
      */
     void stop();
-    
+
   private:
     static Timer* p_first;
     Timer* p_next;

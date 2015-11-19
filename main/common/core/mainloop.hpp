@@ -42,7 +42,7 @@ namespace Mainloop {
      * called inside a timer or input handler.
      */
     void run();
-    
+
     /**
      * Stops the main event loop (started with run()) as fast as possible
      * (usually after current event handler (timer or input) returns).
@@ -50,7 +50,7 @@ namespace Mainloop {
      * invoked by one. If the main loop is not running this has no effect.
      */
     void exit();
-    
+
 }
 
 

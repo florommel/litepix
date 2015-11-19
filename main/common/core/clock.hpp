@@ -33,13 +33,13 @@
  * Contains functions connected with date and time.
  */
 namespace Clock {
-    
+
     /**
      * Get a timestamp in milliseconds as 16bit unsigned integer.
      * Note that this value will overflow and start from zero every ~66 seconds.
      */
     uint16_t short_time_ms();
-    
+
 }
 
 

@@ -27,7 +27,7 @@
 
 
 namespace Progmem {
-    
+
     template<>
     inline uint8_t read<uint8_t>(uint8_t const* address);
 

@@ -62,11 +62,11 @@ __attribute__((OS_main))
 #endif
 int main(void) {
     start();
-    
+
     while (true) {
         Input::clear_handler();
         Input::clear_events();
-        
+
         switch (next) {
             CASE_RUN_MODULE(Menu);
             CASE_RUN_MODULE(AniTest);

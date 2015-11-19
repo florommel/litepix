@@ -77,7 +77,7 @@ bool Timer::is_running() const {
 
 void Timer::start() {
     if (delegate.empty()) return;
-    
+
     if (p_first == 0) {
         p_first = this;
     } else {
@@ -96,7 +96,7 @@ void Timer::start() {
 
 void Timer::stop() {
     if (p_first == 0) return;
-    
+
     if (p_first == this) {
         p_first = this->p_next;
     } else {
@@ -110,4 +110,3 @@ void Timer::stop() {
         }
     }
 }
-

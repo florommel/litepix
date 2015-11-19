@@ -33,20 +33,20 @@
  * Provides functions for pseudorandom number generation.
  */
 namespace Random {
-    
+
     /**
      * Initialize random number generator with a seed.
      * @param   seed   the seed.
      */
     void seed(uint16_t seed);
-    
+
     /**
      * Get a pseudorandom integer value between 1 and 2^16-1.
      * Note that the value 0 is never returned.
      * @return   random integer value between 1 and 2^16-1
      */
     uint16_t get_uint();
-    
+
     /**
      * Get a pseudorandom boolean value.
      * @return   random boolean value

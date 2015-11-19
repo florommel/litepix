@@ -45,7 +45,7 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
     cairo_set_source_rgb(cr, 0, 0, 0);
     cairo_rectangle(cr, 0, 0, RectWidth, RectHeight);
     cairo_fill(cr);
-    
+
     g_mutex_lock(&save_buffer_mutex);
     uint8_t *p = save_buffer;
     int i, j;
@@ -95,7 +95,7 @@ static gboolean on_key_press(GtkWidget *widget, GdkEventKey *event,
         case 0xFF1B:
             d = Input::Exit;
     }
-    
+
     Input inp(1, d);
     input_queue.push(inp);
     return TRUE;
@@ -105,7 +105,7 @@ static gboolean on_key_press(GtkWidget *widget, GdkEventKey *event,
 static gpointer gtk_thread_func(gpointer data) {
     gtk_main();
     return NULL;
-} 
+}
 
 
 static void init_pix() __attribute__((constructor));
@@ -113,21 +113,21 @@ static void init_pix() {
     GtkWidget *darea;
 
     gtk_init(NULL, NULL);
-    
+
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    
+
     darea = gtk_drawing_area_new();
     gtk_container_add(GTK_CONTAINER(window), darea);
-    
-    g_signal_connect(G_OBJECT(darea), "draw", 
-                     G_CALLBACK(on_draw_event), NULL);  
+
+    g_signal_connect(G_OBJECT(darea), "draw",
+                     G_CALLBACK(on_draw_event), NULL);
     g_signal_connect(window, "destroy",
                      G_CALLBACK(on_window_destroy), NULL);
     g_signal_connect (G_OBJECT(window), "key_press_event",
                       G_CALLBACK(on_key_press), NULL);
-    
+
     gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
-    gtk_window_set_default_size(GTK_WINDOW(window), RectWidth, RectHeight); 
+    gtk_window_set_default_size(GTK_WINDOW(window), RectWidth, RectHeight);
     gtk_window_set_title(GTK_WINDOW(window), "Simulator");
     gtk_widget_show_all(window);
 

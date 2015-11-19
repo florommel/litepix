@@ -49,10 +49,10 @@ static void init_clock() {
 
 uint16_t Clock::short_time_ms() {
     uint16_t tmp;
-    
+
     g_mutex_lock(&milliseconds_mutex);
     tmp = milliseconds;
     g_mutex_unlock(&milliseconds_mutex);
-    
+
     return tmp;
 }

@@ -26,18 +26,18 @@
 
 Color Color::from_hsv(uint8_t h, uint8_t s, uint8_t v) {
     if (s == 0) return Color(v, v, v);
-    
+
     uint8_t hi, f;
     {
         uint16_t h6 = h * 6;
         hi = h6 >> 8;
         f = h6 - ((uint16_t)hi << 8);
     }
-    
+
     uint8_t p = ((uint16_t)v * (255 - s)) >> 8;
     uint8_t q = ((uint16_t)v * (255 - (((uint16_t)s * f) >> 8))) >> 8;
     uint8_t t = ((uint16_t)v * (255 - (((uint16_t)s * (255 - f)) >> 8))) >> 8;
-    
+
     switch (hi) {
         case 0:
             return Color(v, t, p);

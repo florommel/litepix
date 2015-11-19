@@ -39,10 +39,10 @@
  */
 class Input {
   public:
-    
+
     /** A type that represents a device ID */
     typedef uint8_t Device;
-    
+
     /** A type that represents input data */
     enum Data : uint8_t {
         Ok = 1,  // start with 1, 0 represents invalid Input
@@ -52,13 +52,13 @@ class Input {
         Down,
         Exit
     };
-    
+
     /** Represents the input device ID */
     Device device;
-    
+
     /** Represents the input data */
     Data data;
-    
+
     /**
      * Initialize an new input object.
      * @param   device   input device ID
@@ -66,24 +66,24 @@ class Input {
      */
     constexpr Input(Device device, Data data)
         : device(device), data(data) {}
-    
+
     /**
      * Set input handler.
      * @param   handler   delegate that handles input events.
      */
     static void set_handler(Delegate<void(Input)> handler);
-    
+
     /**
      * Remove active input handler.
      */
     static void clear_handler();
-    
+
     /**
      * Clear all pending input events.
      * All events that are pending to be processed are removed.
      */
     static void clear_events(); // TODO not working on avr
-    
+
   private:
     static void handle();
     friend void Mainloop::run();

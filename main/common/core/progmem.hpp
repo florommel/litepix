@@ -46,17 +46,17 @@
  * program memory (see #PROGMEM).
  */
 namespace Progmem {
-    
+
     /** Type to measure the size (in bytes) of an arbitrary object */
     typedef decltype(sizeof(uint8_t)) size_t;
-    
+
     /**
      * Get an object of type T from program memory at the specified address.
      * @param   address   a pointer to the object
      */
     template<typename T>
     inline T read(T const* address);
-    
+
     /**
      * Get an object of type T from program memory at the specified address
      * with given offset.

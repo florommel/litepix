@@ -50,7 +50,7 @@ enum class Direction : uint8_t {
  * event loop (see Mainloop). The instance holds transition state
  * variables between steps and must therefore exist at least until the end of
  * the transition.
- * 
+ *
  * Before starting a transition there has to be set a destination canvas
  * (see set_destination()) and a source color or canvas (see set_source()).
  * The destination canvas holds the original image which will be altered step
@@ -59,7 +59,7 @@ enum class Direction : uint8_t {
  */
 class Transition {
   public:
-    
+
     /**
      * Start fade transition.
      * @param   duration         the transition's duration in milliseconds.
@@ -68,7 +68,7 @@ class Transition {
      */
     void fade(uint16_t duration,
               Delegate<void()> finished_action = Delegate<void()>());
-    
+
     /**
      * Start roll transition.
      * @param   direction        the transition's direction
@@ -78,7 +78,7 @@ class Transition {
      */
     void roll(Direction direction, uint16_t duration,
               Delegate<void()> finished_action = Delegate<void()>());
-    
+
     /**
      * Start dissolve transition.
      * @param   duration         the transition's duration in milliseconds.
@@ -87,7 +87,7 @@ class Transition {
      */
     void dissolve(uint16_t duration,
                   Delegate<void()> finished_action = Delegate<void()>());
-    
+
     /**
      * Set the destination canvas. The destination canvas holds the
      * original image which will be altered step by step when a transition
@@ -98,7 +98,7 @@ class Transition {
     void set_destination(Canvas& canvas) {
         dest = &canvas;
     }
-    
+
     /**
      * Set canvas as source. The source canvas is never modified.
      * @param   canvas   source canvas (as reference - the instance
@@ -108,7 +108,7 @@ class Transition {
         src.canvas = &canvas;
         is_color = false;
     }
-    
+
     /**
      * Set color as source.
      * @param   color   source color
@@ -119,7 +119,7 @@ class Transition {
         src.color_buffer[2] = color.blue;
         is_color = true;
     }
-    
+
     /**
      * Set transition mask. The mask defines which pixels will be affected by
      * future transitions.
@@ -128,14 +128,14 @@ class Transition {
     void set_mask(Mask& mask) {
         this->mask = &mask;
     }
-    
+
     /**
      * Clear transition mask. All pixels will be affected by future transitions.
      */
     void clear_mask() {
         mask = nullptr;
     }
-    
+
   private:
     union {
         Canvas* canvas;
@@ -152,7 +152,7 @@ class Transition {
         uint8_t seed;
     } ext;
     bool is_color = true;
-    
+
     void set_common_parameters(uint16_t duration,
                                Delegate<void()> finished_action);
     void finish_step();

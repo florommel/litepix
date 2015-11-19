@@ -33,10 +33,10 @@ static volatile uint16_t milliseconds;
 static void init_timer(void) __attribute__((constructor));
 static void init_timer(void) {
     TCCR0A |= (1 << WGM01); // CTC mode
- 	TCCR0B |= (1 << CS02);  // prescaler: 256
- 	OCR0A = TimerMax;
- 	TIMSK0 |= (1 << OCIE0A);
- 	sei();
+    TCCR0B |= (1 << CS02);  // prescaler: 256
+    OCR0A = TimerMax;
+    TIMSK0 |= (1 << OCIE0A);
+    sei();
 }
 
 
@@ -47,10 +47,10 @@ ISR(TIMER0_COMPA_vect) {
 
 uint16_t Clock::short_time_ms(void) {
     uint16_t tmp;
-    
+
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
         tmp = milliseconds;
     }
-    
+
     return tmp;
 }

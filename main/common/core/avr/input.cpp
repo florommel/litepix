@@ -35,28 +35,28 @@ static uint8_t request = MasterSendRequest;
 static void init_serial(void) __attribute__((constructor));
 static void init_serial(void) {
     cli();
-    
+
     // set baud rate
     UBRR0 = 0x19; // baudrate 38400
-    
+
     // set synchronous mode and frame format: 8data, 2stop bit
     UCSR0C = (1 << UMSEL00) | (1 << USBS0) | (1 << UCSZ01) | (1 << UCSZ00);
-    
+
     // enable receiver and transmitter
     UCSR0B = (1 << RXEN0) | (1 << TXEN0);
-    
+
     // XCK pin as ouput
     DDRD |= (1 << PD4);
-    
+
     // TODO enable parity bit generation
-    
+
     sei();
 }
 
 
 void Input::handle() {
     if (input_handler.empty()) return;
-    
+
     if (UCSR0A & (1 << RXC0)) {
         uint8_t received = UDR0;
         if (!first_byte_received) {
@@ -69,7 +69,7 @@ void Input::handle() {
             first_byte_received = false;
         }
     }
-    
+
     if ((request != 0) && (UCSR0A & (1 << UDRE0))) {
         UDR0 = request;
         request = 0;

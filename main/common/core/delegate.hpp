@@ -90,12 +90,12 @@ class Delegate;
 template<typename RetT, typename ArgT>
 class Delegate<RetT(ArgT)> {
   public:
-    
+
     /**
      * Initialize an empty delegate.
      */
     constexpr Delegate() : obj_ptr(nullptr), handler(nullptr) {}
-    
+
     /**
      * Create delegate from a method and an object pointer.
      * Use #DELEGATE or #DELEGATE_SIG macro instead.
@@ -110,7 +110,7 @@ class Delegate<RetT(ArgT)> {
             reinterpret_cast<RetT (*)(void*, ArgT)>
             (&(Delegate<RetT(ArgT)>::handler_wrapper<T, handler>)));
     }
-    
+
     /**
      * Create delegate from a static method or function.
      * Use #DELEGATE_STATIC or #DELEGATE_STATIC_SIG macro instead.
@@ -124,7 +124,7 @@ class Delegate<RetT(ArgT)> {
             reinterpret_cast<RetT (*)(void*, ArgT)>
             (&(Delegate<RetT(ArgT)>::static_handler_wrapper<handler>)));
     }
-    
+
     /**
      * Execute bound method.
      * @param   arg   method argument
@@ -133,7 +133,7 @@ class Delegate<RetT(ArgT)> {
     RetT operator()(ArgT arg) const {
         return handler(obj_ptr, arg);
     }
-    
+
     /**
      * Determine if the delegate is empty.
      * @return   true when the delegate is empty, otherwise false
@@ -141,7 +141,7 @@ class Delegate<RetT(ArgT)> {
     bool empty() const {
         return (handler == nullptr);
     }
-    
+
     /**
      * Clear delegate.
      */
@@ -149,19 +149,19 @@ class Delegate<RetT(ArgT)> {
         handler = nullptr;
         obj_ptr = nullptr;
     }
-    
+
   private:
     void* obj_ptr;
     RetT (*handler)(void* obj_ptr, ArgT arg);
-    
+
     constexpr Delegate(void* obj_ptr, RetT (*handler)(void*, ArgT arg))
         : obj_ptr(obj_ptr), handler(handler) {}
-    
+
     template <typename T, RetT (T::*handler)(ArgT arg)>
     static RetT handler_wrapper(T* obj_ptr, ArgT arg) {
         return (obj_ptr->*handler)(arg);
     }
-    
+
     template <RetT (handler)(ArgT arg)>
     static RetT static_handler_wrapper(void*, ArgT arg) {
         return handler(arg);
@@ -175,12 +175,12 @@ class Delegate<RetT(ArgT)> {
 template<typename RetT>
 class Delegate<RetT()> {
   public:
-    
+
     /**
      * Initialize an empty delegate.
      */
     constexpr Delegate() : obj_ptr(nullptr), handler(nullptr) {}
-    
+
     /**
      * Create delegate from a method and an object pointer.
      * Use #DELEGATE or #DELEGATE_SIG macro instead.
@@ -194,7 +194,7 @@ class Delegate<RetT()> {
         return Delegate<RetT()>(obj_ptr, reinterpret_cast<RetT (*)(void*)>
             (&(Delegate::handler_wrapper<T, handler>)));
     }
-    
+
     /**
      * Create delegate from a static method or function.
      * Use #DELEGATE_STATIC or #DELEGATE_STATIC_SIG macro instead.
@@ -207,7 +207,7 @@ class Delegate<RetT()> {
         return Delegate<RetT()>(nullptr, reinterpret_cast<RetT (*)(void*)>
             (&(Delegate<RetT()>::static_handler_wrapper<handler>)));
     }
-    
+
     /**
      * Execute bound method.
      * @return  method return value
@@ -215,7 +215,7 @@ class Delegate<RetT()> {
     RetT operator()() const {
         return handler(obj_ptr);
     }
-    
+
     /**
      * Determine if the delegate is empty.
      * @return   true when the delegate is empty, otherwise false
@@ -223,7 +223,7 @@ class Delegate<RetT()> {
     bool empty() const {
         return (handler == nullptr);
     }
-    
+
     /**
      * Clear delegate.
      */
@@ -231,19 +231,19 @@ class Delegate<RetT()> {
         handler = nullptr;
         obj_ptr = nullptr;
     }
-    
+
   private:
     void* obj_ptr;
     RetT (*handler)(void* obj_ptr);
-    
+
     constexpr Delegate(void* obj_ptr, RetT (*handler)(void*))
         : obj_ptr(obj_ptr), handler(handler) {}
-    
+
     template <typename T, RetT (T::*handler)()>
     static RetT handler_wrapper(T* obj_ptr) {
         return (obj_ptr->*handler)();
     }
-    
+
     template <RetT (handler)()>
     static RetT static_handler_wrapper(void*) {
         return handler();
@@ -259,7 +259,7 @@ namespace _internal {
     template<typename T> struct rm_ptr<T* const> {typedef T type;};
     template<typename T> struct rm_ptr<T* volatile> {typedef T type;};
     template<typename T> struct rm_ptr<T* const volatile> {typedef T type;};
-    
+
     template<typename S> struct DelegateTypeInfo {typedef S signature;};
     template<typename T, typename R, typename P>
     DelegateTypeInfo<R (P)> delegate_type_helper(R (T::*f)(P));

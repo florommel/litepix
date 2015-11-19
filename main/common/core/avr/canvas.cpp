@@ -49,11 +49,11 @@ static void init_pix() {
 static void rearrange(uint8_t buffer[]) {
     uint8_t *ps = &buffer[60];
     uint8_t *pe = &buffer[120];
-    
+
     asm (
         "        ldi r18, 10\n\t"
         "        ldi r19, 6\n\t"
-        
+
         "rearr:  ld r20, %a[ps]\n\t"
         "        ldd r21, %a[ps]+1\n\t"
         "        ldd r22, %a[ps]+2\n\t"
@@ -78,7 +78,7 @@ static void rearrange(uint8_t buffer[]) {
         ::
         [ps] "y" (ps),
         [pe] "z" (pe)
-        : "r18", "r19", "r20", "r21", 
+        : "r18", "r19", "r20", "r21",
           "r22", "r23", "r24", "r25"
     );
 }
@@ -101,11 +101,11 @@ void Canvas::render() {
     uint8_t nbits = 7;
     uint8_t tmp = low;
     uint16_t nbytes = Bytes/3;
-    
+
     uint8_t tmp_sreg = SREG;
     cli();
 
-    asm volatile(    
+    asm volatile(
         "start:  nop\n\t"
         "        nop\n\t"
         "        nop\n\t"
@@ -169,8 +169,8 @@ void Canvas::render() {
         [tmp]       "d" (tmp),
         [bytecount] "w" (nbytes)
     );
-    
+
     SREG = tmp_sreg;
-    
+
     rearrange(buffer);
 }
