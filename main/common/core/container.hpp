@@ -29,28 +29,32 @@
 #include <stdint.h>
 
 
+/** Type to measure the size (in bytes) of an arbitrary object */
+typedef decltype(sizeof(uint8_t)) size_t;
+
+
 /**
  * A simple array wrapper.
  */
-template<typename T, uint16_t Size>
+template<typename T, size_t Size>
 class Array;
 
 /**
  * A bit (boolean) array optimized for space allocation.
  */
-template<uint16_t Size>
+template<size_t Size>
 using BitArray = Array<bool, Size>;
 
 /**
  * A 2-dimensional matrix.
  */
-template<typename T, uint8_t Width, uint8_t Height>
+template<typename T, size_t Width, size_t Height>
 class Matrix;
 
 /**
  * A 2-dimensional bit (boolean) matrix optimized for space allocation.
  */
-template<uint8_t Width, uint8_t Height>
+template<size_t Width, size_t Height>
 using Bitmap = Matrix<bool, Width, Height>;
 
 
@@ -59,7 +63,7 @@ using Bitmap = Matrix<bool, Width, Height>;
 
 
 
-template<typename T, uint8_t Width, uint8_t Height>
+template<typename T, size_t Width, size_t Height>
 class Matrix : public Array<T, Width*Height> {
   public:
 
@@ -69,7 +73,7 @@ class Matrix : public Array<T, Width*Height> {
      * @param   y   y-position
      * @return  element at position (x, y)
      */
-    constexpr T operator()(uint8_t x, uint8_t y) const {
+    constexpr T operator()(size_t x, size_t y) const {
         return (*this)[(uint16_t)y*Width + x];
     }
 
@@ -79,13 +83,13 @@ class Matrix : public Array<T, Width*Height> {
      * @param   y   y-position
      * @return  element reference at position (x, y)
      */
-    T& operator()(uint8_t x, uint8_t y) {
+    T& operator()(size_t x, size_t y) {
         return (*this)[(uint16_t)y*Width + x];
     }
 };
 
 
-template<uint8_t Width, uint8_t Height>
+template<size_t Width, size_t Height>
 class Matrix<bool, Width, Height>
     : public BitArray<Width*Height> {
   public:
@@ -96,7 +100,7 @@ class Matrix<bool, Width, Height>
      * @param   y   y-position
      * @return  bit value at position (x, y)
      */
-    constexpr bool operator()(uint8_t x, uint8_t y) const {
+    constexpr bool operator()(size_t x, size_t y) const {
         return (*this)[(uint16_t)y*Width + x];
     }
 
@@ -106,14 +110,14 @@ class Matrix<bool, Width, Height>
      * @param   y   y-position
      * @return  bit reference at position (x, y)
      */
-    typename BitArray<Width*Height>::BitRef operator()(uint8_t x, uint8_t y) {
+    typename BitArray<Width*Height>::BitRef operator()(size_t x, size_t y) {
         return (*this)[(uint16_t)y*Width + x];
     }
 
 };
 
 
-template<typename T, uint16_t Size>
+template<typename T, size_t Size>
 class Array {
   public:
 
@@ -122,8 +126,7 @@ class Array {
      * @param   index   element index
      * @return  element (copy) at index
      */
-    template<typename IntT>
-    constexpr T operator[](IntT index) const {
+    constexpr T operator[](size_t index) const {
         return buffer[index];
     }
 
@@ -132,8 +135,7 @@ class Array {
      * @param   index   element index
      * @return  element reference at index
      */
-    template<typename IntT>
-    T& operator[](IntT index) {
+    T& operator[](size_t index) {
         return buffer[index];
     }
 
@@ -146,7 +148,7 @@ class Array {
  * A boolean array optimized for space allocation.
  * Each element occupies only one bit.
  */
-template<uint16_t Size>
+template<size_t Size>
 class Array<bool, Size> {
   public:
 
@@ -195,8 +197,7 @@ class Array<bool, Size> {
      * @param   index   bit index
      * @return  bit value at index
      */
-    template<typename IntT>
-    constexpr bool operator[](IntT index) const {
+    constexpr bool operator[](size_t index) const {
         return buffer[index >> 3] & (1 << (index & 0x07));
     }
 
@@ -205,8 +206,7 @@ class Array<bool, Size> {
      * @param   index   bit index
      * @return  bit reference at index
      */
-    template<typename IntT>
-    BitRef operator[](IntT index) {
+    BitRef operator[](size_t index) {
         return BitRef(&(buffer[index >> 3]), index & 0x07);
     }
 
@@ -215,8 +215,7 @@ class Array<bool, Size> {
      * This is faster than accessing the bit via index operator.
      * @param   index   bit index
      */
-    template<typename IntT>
-    void bit_set(IntT index) {
+    void bit_set(size_t index) {
         buffer[index >> 3] |= (1 << (index & 0x07));
     }
 
@@ -225,8 +224,7 @@ class Array<bool, Size> {
      * This is faster than accessing the bit via index operator.
      * @param   index   bit index
      */
-    template<typename IntT>
-    void bit_reset(IntT index) {
+    void bit_reset(size_t index) {
         buffer[index >> 3] &= ~(1 << (index & 0x07));
     }
 
@@ -235,8 +233,7 @@ class Array<bool, Size> {
      * This is faster than accessing the bit via index operator.
      * @param   index   bit index
      */
-    template<typename IntT>
-    void bit_toggle(IntT index) {
+    void bit_toggle(size_t index) {
         buffer[index >> 3] ^= (1 << (index & 0x07));
     }
 
@@ -255,8 +252,7 @@ class Array<bool, Size> {
     }
 
   private:
-    template<typename IntT>
-    static constexpr IntT buffer_size(IntT size) {
+    static constexpr size_t buffer_size(size_t size) {
         return ((size & 0x07) == 0) ? (size >> 3) : ((size >> 3) + 1);
     }
 
