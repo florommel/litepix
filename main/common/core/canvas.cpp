@@ -92,6 +92,9 @@ void Canvas::fill_rect(int8_t x, int8_t y, int8_t width, int8_t height,
 
 
 Color Canvas::get_pixel(uint16_t index) const {
+#ifdef REVERSE_HORIZONTAL
+    index = index + Width*(Height-1)-2*(index-index%Width);
+#endif
     index *= 3;
     return Color(buffer[index+1], buffer[index], buffer[index+2]);
 }
@@ -103,6 +106,9 @@ Color Canvas::get_pixel(uint8_t x, uint8_t y) const {
 
 
 void Canvas::set_pixel(uint16_t index, Color color) {
+#ifdef REVERSE_HORIZONTAL
+    index = index + Width*(Height-1)-2*(index-index%Width);
+#endif
     index *= 3;
     buffer[index++] = color.green;
     buffer[index++] = color.red;

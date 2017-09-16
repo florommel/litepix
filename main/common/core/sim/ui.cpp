@@ -57,8 +57,11 @@ static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr,
             cairo_set_source_rgb(cr, ((double)r)/256,
                                      ((double)g)/256,
                                      ((double)b)/256);
-            cairo_rectangle(cr, j*PixelSize+Offset,
-                            i*PixelSize+Offset, 28, 28);
+#ifndef REVERSE_HORIZONTAL
+            cairo_rectangle(cr, j*PixelSize+Offset, i*PixelSize+Offset, 28, 28);
+#else
+            cairo_rectangle(cr, j*PixelSize+Offset, (Canvas::Height-i-1)*PixelSize+Offset, 28, 28);
+#endif
             cairo_fill(cr);
         }
     }

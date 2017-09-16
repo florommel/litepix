@@ -46,10 +46,20 @@ class Input {
     /** A type that represents input data */
     enum Data : uint8_t {
         Ok = 1,  // start with 1, 0 represents invalid Input
+#ifdef REVERSE_VERTICAL
+        Right,
+        Left,
+#else
         Left,
         Right,
+#endif
+#ifdef REVERSE_HORIZONTAL
+        Down,
+        Up,
+#else
         Up,
         Down,
+#endif
         Exit
     };
 

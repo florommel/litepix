@@ -29,7 +29,11 @@
 #include <stdint.h>
 #include "container.hpp"
 
+//Define to mirror image on vertical line
+//#define REVERSE_VERTICAL
 
+//Define to mirror image on horizontal line
+//#define REVERSE_HORIZONTAL
 /**
  * Describes a color.
  */

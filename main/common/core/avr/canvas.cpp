@@ -47,9 +47,13 @@ static void init_pix() {
 
 
 static void rearrange(uint8_t buffer[]) {
+#ifdef REVERSE_VERTICAL
+    uint8_t *ps = &buffer[0];
+    uint8_t *pe = &buffer[60];
+#else
     uint8_t *ps = &buffer[60];
     uint8_t *pe = &buffer[120];
-
+#endif
     asm (
         "        ldi r18, 10\n\t"
         "        ldi r19, 6\n\t"
